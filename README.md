@@ -57,5 +57,9 @@ A pack whose download stops working is unlisted on its own: the directory checks
 every link daily, and three failures on three separate days takes it off the
 list. If the link starts working again it comes back without anyone asking.
 
+A submission with no activity for two months is closed, to keep the queue
+readable. That is not a refusal — publishing the pack again from the app opens a
+fresh one.
+
 Unofficial. Not made by or affiliated with Yeah Maybe, who make The Choicer
 Voicer.
