@@ -1,68 +1,74 @@
-# The pack directory
+# The Choicer Voicer pack directory
 
-The repository behind the Mods tab in the Choicer Voicer Content Manager.
+This is the list of packs behind the **Mods** tab in the
+[Choicer Voicer Content Manager](https://github.com/jojozagjos/Choicer-Voicer-Content-Manager).
 
-No server, no database, no hosting bill. The index is a JSON file in Git, served
-by raw.githubusercontent.com, and GitHub Actions is the whole backend. Pack files
-are never stored here — each one lives on its own author's GitHub account, and
-this repository only holds the addresses.
+Packs are not stored here. Each one lives on its author's own GitHub account,
+and this repository only keeps a short record of where to find it — the title,
+who made it, what kind of pack it is, the address, and a checksum of what should
+arrive. Installing a pack downloads it from the author, checks it against that
+checksum, and refuses it if the two disagree.
 
-## It depends on the app repository
+## Getting a pack listed
 
-The validator is **not kept here**. All three workflows fetch `directory.js` and
-`linkhealth.js` from the app repository when they run, so the directory refuses
-exactly what the app refuses.
+Publish it from the app. Open a pack in **Content**, press **Share this pack**,
+then **Publish it**.
 
-That is deliberate. A copy of those rules living in both places drifts the moment
-one is edited, and nobody notices until something invalid gets listed or
-something valid is turned away — which already happened once while this was being
-built.
+The app uploads the pack to your own GitHub account, works out the address, and
+opens a submission here for you. There is nothing to fill in by hand and no
+files to attach.
 
-The cost is a real dependency: **the workflows do not work until the app
-repository has those files on `main`.** The fetch fails loudly rather than
-carrying on with a stale copy, so the failure shows up as a red run instead of as
-quietly wrong decisions.
+Your first pack is looked at by a person before it appears. After that, packs
+from the same account are listed without waiting.
 
-## Setting it up
+## Where a pack has to be hosted
 
-1. Push this to a **public** repository named `choicer-voicer-directory`.
-2. Make sure the app repository has `src/main/directory.js` and
-   `src/main/linkhealth.js` on `main`, or every workflow here fails at the fetch.
-3. In the app, `DIRECTORY_REPO` in `src/main/main.js` points here, and the index
-   is read from:
+Somewhere that hands a file straight to a program: a **GitHub, GitLab or
+Codeberg release**, or **Dropbox**. Publishing from the app uses a GitHub
+release automatically, so this only matters if a record is written by hand.
 
-   ```
-   https://raw.githubusercontent.com/<you>/choicer-voicer-directory/main/index.json
-   ```
+Google Drive, MEGA, MediaFire and itch.io cannot be used. They answer with a web
+page rather than the file, so a download from them fails — and it fails at the
+moment somebody presses install, which is the worst place to find out.
 
-Until this exists the app says "No packs yet" and sharing by file still works.
+## What gets a pack turned away
 
-## How a pack gets in
+- **A pack credited to somebody who does not host it.** The author has to match
+  the account the download comes from. Only that person can put a file at that
+  address, which is what stops anyone publishing under someone else's name.
+- **A file that does not match its checksum**, which means it changed after it
+  was submitted.
+- **Anything the game cannot read**, or an archive built to escape the folder it
+  unpacks into.
+- **Sexual content or nudity.** There is no way to label a pack as containing it
+  because it is not listed here at all.
 
-The app opens an **issue** here with the record in a fenced JSON block. The
-`submission` workflow reads it, validates it with the same code the app uses,
-and either adds it to `index.json` or explains on the issue what was wrong.
+Packs can be marked as containing strong language, graphic violence, drug or
+alcohol references, or flashing images. Marking one does not stop it being
+listed — it puts a note on the listing so nobody installs something they were
+not expecting.
 
-An issue rather than a pull request because the app would otherwise have to fork
-this repository, keep the fork in step and branch inside it — three things to go
-wrong before anybody has read the submission.
+## Something wrong with a listed pack?
 
-## What the validator will not accept
+Open an issue. Say which pack and what the problem is. Packs can be taken down,
+and accounts that abuse this can be blocked from publishing.
 
-Worth knowing, because these are the refusals people will ask about:
+A pack whose download stops working is unlisted on its own: the directory checks
+every link daily, and three failures on three separate days takes it off the
+list. If the link starts working again it comes back without anyone asking.
 
-- **A pack credited to someone who does not host it.** The `author` has to match
-  the account in `downloadUrl`. Only that person can put a file at that address,
-  so this is the check that makes impersonation hard.
-- **Anywhere that does not serve the file directly.** Drive, MEGA, MediaFire and
-  itch answer with a page rather than the file, so the app cannot download from
-  them.
-- **A missing or malformed checksum.** The app refuses a download that does not
-  match, which is the only thing standing between the reviewed record and the
-  file that actually arrives.
+## Reading the list yourself
 
-## Removing something
+`index.json` is public and needs no account:
 
-Delete its entry from `index.json`. The pack file is not yours and stays where
-its author put it — which is the point: a complaint about a pack is a delisting
-here, not a takedown you have to action.
+```
+https://raw.githubusercontent.com/jojozagjos/choicer-voicer-directory/main/index.json
+```
+
+Everything in it has been through the same checks the app applies before
+installing anything.
+
+---
+
+Unofficial. Not made by or affiliated with Yeah Maybe, who make The Choicer
+Voicer.
