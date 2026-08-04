@@ -57,18 +57,5 @@ A pack whose download stops working is unlisted on its own: the directory checks
 every link daily, and three failures on three separate days takes it off the
 list. If the link starts working again it comes back without anyone asking.
 
-## Reading the list yourself
-
-`index.json` is public and needs no account:
-
-```
-https://raw.githubusercontent.com/jojozagjos/choicer-voicer-directory/main/index.json
-```
-
-Everything in it has been through the same checks the app applies before
-installing anything.
-
----
-
 Unofficial. Not made by or affiliated with Yeah Maybe, who make The Choicer
 Voicer.
