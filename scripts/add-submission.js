@@ -99,7 +99,23 @@ if (existing !== -1) {
   index.packs.push(record);
 }
 
-index.packs.sort((a, b) => a.id.localeCompare(b.id));
+// One entry per pack, whatever happened on the way here.
+//
+// Replacing by id above is not enough on its own. Two submissions for the same
+// pack each branch from main before either is merged, so neither sees the
+// other's entry, and merging both leaves the pack listed twice. This is the
+// backstop: after every change, the newest record for an id wins and the rest
+// are dropped.
+const newest = new Map();
+for (const pack of index.packs) {
+  const seen = newest.get(pack.id);
+  const when = (p) => Date.parse(p.updated || p.published) || 0;
+  if (!seen || when(pack) >= when(seen)) newest.set(pack.id, pack);
+}
+const duplicates = index.packs.length - newest.size;
+if (duplicates > 0) console.log(`Dropped ${duplicates} duplicate listing(s)`);
+
+index.packs = [...newest.values()].sort((a, b) => a.id.localeCompare(b.id));
 index.updated = new Date().toISOString();
 
 // Checked as a whole before writing. A single bad record must not be able to
