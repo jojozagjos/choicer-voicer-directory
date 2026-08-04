@@ -157,6 +157,9 @@ const attributable = owner !== null;
 const auto = attributable && (trusted || knownAlready);
 
 fs.writeFileSync('submission-auto.txt', auto ? 'yes' : 'no');
+// Written out so the malware check does not have to dig the record back out of
+// the index to find what it is checking.
+fs.writeFileSync('submission-sha.txt', record.sha256 || '');
 
 console.log(`${existing === -1 ? 'Added' : 'Updated'} ${record.id} by ${record.author}`
   + (auto ? ' (auto)' : ` (needs review${attributable ? '' : ', unattributable address'})`));

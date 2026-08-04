@@ -69,6 +69,33 @@ jobs:
               body: why + '\n\nFix it and edit the issue, and this will run again.',
             });
 
+      # Before anything is listed, and on every submission including the ones
+      # that never wait for a person. A check that only runs when somebody is
+      # watching is a check that does not run.
+      - name: Ask VirusTotal about the file
+        id: virus
+        if: steps.add.outcome == 'success'
+        continue-on-error: true
+        env:
+          VIRUSTOTAL_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
+        run: node scripts/virus-check.js "$(cat submission-sha.txt 2>/dev/null)"
+
+      - name: Refuse a file that is flagged
+        if: steps.virus.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const why = fs.existsSync('virus-error.txt')
+              ? fs.readFileSync('virus-error.txt', 'utf8')
+              : 'This file was refused by the malware check.';
+            await github.rest.issues.createComment({
+              ...context.repo, issue_number: context.issue.number, body: why,
+            });
+            await github.rest.issues.update({
+              ...context.repo, issue_number: context.issue.number, state: 'closed',
+            });
+            core.setFailed('refused by the malware check');
       # Whether this account has earned listing without waiting. Decided by
       # add-submission.js, which knows the trust rules; this only reads its
       # answer. Without this step the answer was written and never looked at,
