@@ -1,0 +1,6 @@
+# Fetched from the app at build time, never committed. See the workflows.
+scripts/directory.js
+scripts/linkhealth.js
+
+# Written by the link checker.
+health.json

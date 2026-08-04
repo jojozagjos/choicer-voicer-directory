@@ -29,6 +29,16 @@ jobs:
         with:
           node-version: '20'
 
+      # Fetched from the app rather than kept here. The directory has to refuse
+      # exactly what the app refuses, and two copies of that rule drift the
+      # moment one of them is edited — which is not noticed until something
+      # invalid is listed, or something valid is turned away.
+      - name: Fetch the validator from the app
+        run: |
+          base=https://raw.githubusercontent.com/jojozagjos/Choicer-Voicer-Content-Manager/main/src/main
+          curl -fsSL "$base/directory.js" -o scripts/directory.js
+          curl -fsSL "$base/linkhealth.js" -o scripts/linkhealth.js
+
       - name: Read the issue
         env:
           BODY: ${{ github.event.issue.body }}
@@ -37,7 +47,12 @@ jobs:
       - name: Validate and add
         id: add
         continue-on-error: true
-        run: node scripts/add-submission.js issue-body.txt "${{ github.event.issue.user.login }}"
+        # Through the environment, never interpolated into the command text.
+        # See the note in moderate.yml: that position is where attacker-
+        # controlled text would become executable.
+        env:
+          SUBMITTER: ${{ github.event.issue.user.login }}
+        run: node scripts/add-submission.js issue-body.txt "$SUBMITTER"
 
       - name: Say what was wrong
         if: steps.add.outcome == 'failure'
@@ -54,16 +69,43 @@ jobs:
               body: why + '\n\nFix it and edit the issue, and this will run again.',
             });
 
+      # Whether this account has earned listing without waiting. Decided by
+      # add-submission.js, which knows the trust rules; this only reads its
+      # answer. Without this step the answer was written and never looked at,
+      # so every submission queued for review including trusted ones.
+      - name: Does this still need a person?
+        id: gate
+        if: steps.add.outcome == 'success'
+        run: echo "auto=$(cat submission-auto.txt 2>/dev/null || echo no)" >> "$GITHUB_OUTPUT"
+
       - name: Open the change for review
+        id: pr
         if: steps.add.outcome == 'success'
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: "Add ${{ github.event.issue.title }}"
-          title: "${{ github.event.issue.title }}"
+          # Derived from the issue number, not the issue's own title. A title is
+          # a stranger's text and would otherwise land in a commit message, a
+          # branch name and a PR title unchecked. The pack's real name is in the
+          # record, which has been validated.
+          commit-message: "Pack submission #${{ github.event.issue.number }}"
+          title: "Pack submission #${{ github.event.issue.number }}"
           body: |
-            From #${{ github.event.issue.number }}, submitted by @${{ github.event.issue.user.login }}.
+            From #${{ github.event.issue.number }}.
 
-            The record validated and the author matches the account hosting the file.
-            Worth a look at the pack itself before merging.
+            The record validated and the author matches the account hosting the
+            file. **Review the pack itself before merging** — validation checks
+            the shape of the record, not what is inside the pack.
           branch: submission/${{ github.event.issue.number }}
           delete-branch: true
+
+      # A publisher who has already had a pack read by a person does not need
+      # every later one read too. One human look per publisher, not per pack —
+      # reviewing everything makes the maintainer the bottleneck, and a queue
+      # nobody reaches is how a directory dies. `/hide` and `/ban` make a wrong
+      # call cheap to undo.
+      - name: List it without waiting, if this account has earned that
+        if: steps.gate.outputs.auto == 'yes' && steps.pr.outputs.pull-request-number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.pr.outputs.pull-request-number }}
+        run: gh pr merge "$PR" --squash --delete-branch --repo "${{ github.repository }}"

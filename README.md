@@ -1,28 +1,41 @@
 # The pack directory
 
-Everything in this folder belongs in a **separate public repository**, not in the
-app's repo. Copy it there and the directory is running.
+The repository behind the Mods tab in the Choicer Voicer Content Manager.
 
-It has no server, no database and no hosting bill. The index is a JSON file in
-Git, served by raw.githubusercontent.com. Pack files are never stored here —
-each one lives on its own author's GitHub account, and this repository only
-holds the addresses.
+No server, no database, no hosting bill. The index is a JSON file in Git, served
+by raw.githubusercontent.com, and GitHub Actions is the whole backend. Pack files
+are never stored here — each one lives on its own author's GitHub account, and
+this repository only holds the addresses.
+
+## It depends on the app repository
+
+The validator is **not kept here**. All three workflows fetch `directory.js` and
+`linkhealth.js` from the app repository when they run, so the directory refuses
+exactly what the app refuses.
+
+That is deliberate. A copy of those rules living in both places drifts the moment
+one is edited, and nobody notices until something invalid gets listed or
+something valid is turned away — which already happened once while this was being
+built.
+
+The cost is a real dependency: **the workflows do not work until the app
+repository has those files on `main`.** The fetch fails loudly rather than
+carrying on with a stale copy, so the failure shows up as a red run instead of as
+quietly wrong decisions.
 
 ## Setting it up
 
-1. Make a new **public** repository. `choicer-voicer-directory` is the obvious
-   name.
-2. Copy the contents of this folder into it and push.
-3. Take the raw address of `index.json`:
+1. Push this to a **public** repository named `choicer-voicer-directory`.
+2. Make sure the app repository has `src/main/directory.js` and
+   `src/main/linkhealth.js` on `main`, or every workflow here fails at the fetch.
+3. In the app, `DIRECTORY_REPO` in `src/main/main.js` points here, and the index
+   is read from:
 
    ```
    https://raw.githubusercontent.com/<you>/choicer-voicer-directory/main/index.json
    ```
 
-4. Put that in the app as `modsIndexUrl`, and set `DIRECTORY_REPO` in
-   `src/main/main.js` to `<you>/choicer-voicer-directory`.
-
-Until step 4 the app says "No directory yet" and sharing by file still works.
+Until this exists the app says "No packs yet" and sharing by file still works.
 
 ## How a pack gets in
 

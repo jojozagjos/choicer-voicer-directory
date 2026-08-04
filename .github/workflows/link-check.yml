@@ -1,0 +1,61 @@
+name: Link check
+
+# Asks daily whether every listed pack can still be downloaded, and unlists the
+# ones that cannot.
+#
+# The directory links to files it does not host, so records outlive the things
+# they point at, and the failure is silent: the record still validates while
+# pointing at nothing. Nobody is reliably available to notice, so noticing
+# cannot need a person.
+#
+# The rule lives in scripts/linkhealth.js and is tested on its own. In short: a
+# pack is hidden after three confirmed failures on three separate days, and
+# relists itself if the link comes back. A check that merely failed — a
+# timeout, a rate limit, a 500 — counts for nothing.
+
+on:
+  schedule:
+    # Early morning UTC, when hosts are least likely to be rate limiting.
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Fetched from the app rather than kept here. The directory has to refuse
+      # exactly what the app refuses, and two copies of that rule drift the
+      # moment one of them is edited — which is not noticed until something
+      # invalid is listed, or something valid is turned away.
+      - name: Fetch the validator from the app
+        run: |
+          base=https://raw.githubusercontent.com/jojozagjos/Choicer-Voicer-Content-Manager/main/src/main
+          curl -fsSL "$base/directory.js" -o scripts/directory.js
+          curl -fsSL "$base/linkhealth.js" -o scripts/linkhealth.js
+
+      - name: Check every link
+        id: check
+        continue-on-error: true
+        run: node scripts/check-links.js index.json --health health.json
+
+      - name: Commit what changed
+        run: |
+          if [ -z "$(git status --porcelain index.json health.json)" ]; then
+            echo "nothing changed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json health.json
+          git commit -m "Link check"
+          git push

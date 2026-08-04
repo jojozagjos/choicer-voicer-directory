@@ -1,0 +1,100 @@
+name: Moderation
+
+# Moderation commands, typed as issue comments.
+#
+# The security model is GitHub's, not this file's: the commenter's permission on
+# this repository is asked of the API, and the command only runs for someone who
+# can already write here. There is no login, no token to leak, and no way to
+# gain rights by sending a cleverly worded issue.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  command:
+    # Cheap filter first, so ordinary conversation does not start a runner.
+    if: startsWith(github.event.comment.body, '/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Fetched from the app rather than kept here. The directory has to refuse
+      # exactly what the app refuses, and two copies of that rule drift the
+      # moment one of them is edited — which is not noticed until something
+      # invalid is listed, or something valid is turned away.
+      - name: Fetch the validator from the app
+        run: |
+          base=https://raw.githubusercontent.com/jojozagjos/Choicer-Voicer-Content-Manager/main/src/main
+          curl -fsSL "$base/directory.js" -o scripts/directory.js
+          curl -fsSL "$base/linkhealth.js" -o scripts/linkhealth.js
+
+      - name: Ask GitHub what this person is allowed to do
+        id: who
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Asked of the API rather than inferred. Opening the issue, or
+            // having published packs, grants nothing.
+            const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+              ...context.repo,
+              username: context.payload.comment.user.login,
+            });
+            core.setOutput('permission', data.permission);
+
+      - name: Read the comment
+        env:
+          BODY: ${{ github.event.comment.body }}
+        run: printf '%s' "$BODY" > comment.txt
+
+      - name: Apply the command
+        id: run
+        continue-on-error: true
+        # Through the environment, never interpolated into the command text.
+        # GitHub expands ${{ }} into the script before the shell sees it, so
+        # anything attacker-controlled in that position is executable. A
+        # username cannot currently hold a shell metacharacter, which makes
+        # that safe today rather than safe by construction.
+        env:
+          COMMENTER: ${{ github.event.comment.user.login }}
+          PERMISSION: ${{ steps.who.outputs.permission }}
+        run: node scripts/moderate.js comment.txt "$COMMENTER" "$PERMISSION"
+
+      - name: Commit the change
+        env:
+          COMMENTER: ${{ github.event.comment.user.login }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          if [ -z "$(git status --porcelain index.json moderation.json)" ]; then
+            echo "nothing changed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json moderation.json
+          git commit -m "Moderation by @$COMMENTER (#$ISSUE)"
+          git push
+
+      - name: Say what happened
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('moderation-reply.txt')) return;
+            const said = fs.readFileSync('moderation-reply.txt', 'utf8').trim();
+            if (!said) return;
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: said,
+            });

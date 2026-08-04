@@ -17,7 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { validateRecord, validateIndex } = require('./directory');
+const { validateRecord, validateIndex, ownerOfDownload } = require('./directory');
 
 const [bodyFile, issueAuthor] = process.argv.slice(2);
 
@@ -66,6 +66,21 @@ if (record.author.toLowerCase() !== String(issueAuthor).toLowerCase()) {
     + `**${record.author}**. A pack has to be submitted by the person it is credited to.`);
 }
 
+const moderationPath = path.join(__dirname, '..', 'moderation.json');
+const moderation = fs.existsSync(moderationPath)
+  ? JSON.parse(fs.readFileSync(moderationPath, 'utf8'))
+  : { banned: [], trusted: [], hidden: [] };
+const listed = (key) => (Array.isArray(moderation[key]) ? moderation[key] : [])
+  .map((v) => String(v).toLowerCase());
+
+const author = record.author.toLowerCase();
+
+if (listed('banned').includes(author)) {
+  // Said plainly and without argument. Anyone who thinks it is a mistake can
+  // say so on the issue, which a moderator will see.
+  refuse('This account cannot publish to the directory.');
+}
+
 const indexPath = path.join(__dirname, '..', 'index.json');
 const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 
@@ -99,7 +114,45 @@ if (whole.rejected.length) {
 
 fs.writeFileSync(indexPath, `${JSON.stringify(index, null, 2)}\n`);
 
-console.log(`${existing === -1 ? 'Added' : 'Updated'} ${record.id} by ${record.author}`);
+// Whether this can go live without waiting for a person.
+//
+// The rule is one human look per publisher, not per pack. Reviewing every
+// update sounds safer but makes the maintainer the bottleneck, and a queue
+// nobody can get to is how a directory quietly dies. A first pack is always
+// read; after that the account is trusted, and `/hide` and `/ban` make a wrong
+// call cheap to undo.
+const trusted = listed('trusted').includes(author);
+const knownAlready = index.packs.some((p) => p.author.toLowerCase() === author && p.id !== record.id)
+  || existing !== -1;
+
+// Whether the address itself proves who published it.
+//
+// A release on github.com/<author>/… can only have been put there by that
+// account, so the claim checks itself. A Dropbox link, or a bare
+// githubusercontent address, names nobody — the file may be perfectly fine, but
+// nothing about the address says who put it there.
+//
+// Those are not refused, because hosting elsewhere is allowed. They are held
+// for review every time instead of ever listing automatically, so the weaker
+// evidence buys less trust rather than the same trust.
+const owner = ownerOfDownload(record.downloadUrl);
+const attributable = owner !== null;
+
+const auto = attributable && (trusted || knownAlready);
+
+fs.writeFileSync('submission-auto.txt', auto ? 'yes' : 'no');
+
+console.log(`${existing === -1 ? 'Added' : 'Updated'} ${record.id} by ${record.author}`
+  + (auto ? ' (auto)' : ` (needs review${attributable ? '' : ', unattributable address'})`));
+
+const why = auto
+  ? 'It will appear in the app shortly.'
+  : attributable
+    ? 'This is the first pack from this account, so it will be looked over before it '
+      + 'appears. Nothing else is needed from you.'
+    : 'It will be looked over before it appears. The download address does not say who '
+      + 'published it — a release on your own GitHub account does, which is why those are '
+      + 'listed without waiting. Nothing else is needed from you.';
+
 fs.writeFileSync('submission-ok.txt',
-  `**${record.title}** is ${existing === -1 ? 'now listed' : 'updated'}. `
-  + 'It will show up in the app\'s Mods tab shortly.');
+  `**${record.title}** is ${existing === -1 ? 'ready to list' : 'updated'}.\n\n${why}`);
