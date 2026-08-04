@@ -78,9 +78,27 @@ jobs:
         if: steps.add.outcome == 'success'
         run: echo "auto=$(cat submission-auto.txt 2>/dev/null || echo no)" >> "$GITHUB_OUTPUT"
 
+      # A publisher who has already had a pack read once does not need every
+      # later one read too. One human look per publisher, not per pack.
+      #
+      # Committed straight to main rather than through a pull request. A pull
+      # request that is going to be merged immediately is a pull request for
+      # nobody, and opening one needs a repository setting that is off by
+      # default — which meant every submission failed here rather than being
+      # listed.
+      - name: List it, for an account that has earned that
+        if: steps.add.outcome == 'success' && steps.gate.outputs.auto == 'yes'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json
+          git commit -m "Pack submission #${{ github.event.issue.number }}"
+          git push
+
       - name: Open the change for review
         id: pr
-        if: steps.add.outcome == 'success'
+        if: steps.add.outcome == 'success' && steps.gate.outputs.auto != 'yes'
+        continue-on-error: true
         uses: peter-evans/create-pull-request@v6
         with:
           # Derived from the issue number, not the issue's own title. A title is
@@ -93,19 +111,24 @@ jobs:
             From #${{ github.event.issue.number }}.
 
             The record validated and the author matches the account hosting the
-            file. **Review the pack itself before merging** — validation checks
+            file. **Review the pack itself before merging.** Validation checks
             the shape of the record, not what is inside the pack.
           branch: submission/${{ github.event.issue.number }}
           delete-branch: true
 
-      # A publisher who has already had a pack read by a person does not need
-      # every later one read too. One human look per publisher, not per pack —
-      # reviewing everything makes the maintainer the bottleneck, and a queue
-      # nobody reaches is how a directory dies. `/hide` and `/ban` make a wrong
-      # call cheap to undo.
-      - name: List it without waiting, if this account has earned that
-        if: steps.gate.outputs.auto == 'yes' && steps.pr.outputs.pull-request-number
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ steps.pr.outputs.pull-request-number }}
-        run: gh pr merge "$PR" --squash --delete-branch --repo "${{ github.repository }}"
+      # Said on the issue rather than left in a log nobody opens. Opening a pull
+      # request needs "Allow GitHub Actions to create and approve pull requests"
+      # under Settings, Actions, General, and it is off by default.
+      - name: Say if the review change could not be opened
+        if: steps.pr.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: 'This pack validated, but the change that lists it could not be opened '
+                + 'automatically. The repository needs **Allow GitHub Actions to create and '
+                + 'approve pull requests** switched on, under Settings, Actions, General. '
+                + 'Nothing is wrong with the pack.',
+            });
