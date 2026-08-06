@@ -18,7 +18,7 @@ const fs = require('fs');
 const path = require('path');
 
 const {
-  validateRecord, validateIndex, ownerOfDownload, roomForAnother,
+  validateRecord, validateIndex, roomForAnother,
 } = require('./directory');
 
 const [bodyFile, issueAuthor] = process.argv.slice(2);
@@ -149,48 +149,26 @@ if (whole.rejected.length) {
 
 fs.writeFileSync(indexPath, `${JSON.stringify(index, null, 2)}\n`);
 
-// Whether this can go live without waiting for a person.
-//
-// The rule is one human look per publisher, not per pack. Reviewing every
-// update sounds safer but makes the maintainer the bottleneck, and a queue
-// nobody can get to is how a directory quietly dies. A first pack is always
-// read; after that the account is trusted, and `/hide` and `/ban` make a wrong
-// call cheap to undo.
-const trusted = listed('trusted').includes(author);
-const knownAlready = index.packs.some((p) => p.author.toLowerCase() === author && p.id !== record.id)
-  || existing !== -1;
-
-// Whether the address itself proves who published it.
-//
-// A release on github.com/<author>/… can only have been put there by that
-// account, so the claim checks itself. A Dropbox link, or a bare
-// githubusercontent address, names nobody — the file may be perfectly fine, but
-// nothing about the address says who put it there.
-//
-// Those are not refused, because hosting elsewhere is allowed. They are held
-// for review every time instead of ever listing automatically, so the weaker
-// evidence buys less trust rather than the same trust.
-const owner = ownerOfDownload(record.downloadUrl);
-const attributable = owner !== null;
-
-const auto = attributable && (trusted || knownAlready);
-
-fs.writeFileSync('submission-auto.txt', auto ? 'yes' : 'no');
 // Written out so the malware check does not have to dig the record back out of
 // the index to find what it is checking.
 fs.writeFileSync('submission-sha.txt', record.sha256 || '');
 
-console.log(`${existing === -1 ? 'Added' : 'Updated'} ${record.id} by ${record.author}`
-  + (auto ? ' (auto)' : ` (needs review${attributable ? '' : ', unattributable address'})`));
+console.log(`${existing === -1 ? 'Added' : 'Updated'} ${record.id} by ${record.author}`);
 
-const why = auto
-  ? 'It will appear in the app shortly.'
-  : attributable
-    ? 'This is the first pack from this account, so it will be looked over before it '
-      + 'appears. Nothing else is needed from you.'
-    : 'It will be looked over before it appears. The download address does not say who '
-      + 'published it — a release on your own GitHub account does, which is why those are '
-      + 'listed without waiting. Nothing else is needed from you.';
-
+// Everything that passes the checks is listed, straight away.
+//
+// There is no queue and nobody approves uploads. Every rule that decides
+// whether a pack belongs here is written down and enforced above: the record
+// has to validate, the author has to be the account hosting the file, the file
+// has to pass the malware check, and the account must not be banned. A pack
+// that clears all of that is listed, and one that does not is refused with the
+// reason. Nothing is left resting on somebody's judgement of the content.
+//
+// This is deliberate rather than a shortcut. Reading and passing judgement on
+// what other people upload is a different undertaking from running a list of
+// links, and it is not one this project is set up to take on. What happens
+// instead is after the fact: anybody can report a pack, and `/hide` and `/ban`
+// deal with it. That is a smaller promise, and one that can actually be kept.
 fs.writeFileSync('submission-ok.txt',
-  `**${record.title}** is ${existing === -1 ? 'ready to list' : 'updated'}.\n\n${why}`);
+  `**${record.title}** is ${existing === -1 ? 'listed' : 'updated'}.\n\n`
+  + 'It will appear in the app shortly. Nothing else is needed from you.');

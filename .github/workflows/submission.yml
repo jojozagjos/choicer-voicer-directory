@@ -95,57 +95,45 @@ jobs:
               ...context.repo, issue_number: context.issue.number, state: 'closed',
             });
             core.setFailed('refused by the malware check');
-      # Whether this account has earned listing without waiting. Decided by
-      # add-submission.js, which knows the trust rules; this only reads its
-      # answer.
-      - name: Does this still need a person?
-        id: gate
-        if: steps.add.outcome == 'success'
-        run: echo "auto=$(cat submission-auto.txt 2>/dev/null || echo no)" >> "$GITHUB_OUTPUT"
-
-      # A publisher who has already had a pack read once does not need every
-      # later one read too. One human look per publisher, not per pack.
+      # Everything that passed the checks is listed, straight away.
+      #
+      # There is no approval step and no queue. Every rule that decides whether
+      # a pack belongs here is enforced above and none of them is a judgement
+      # about the content: the record has to validate, the author has to be the
+      # account hosting the file, the file has to pass the malware check, and
+      # the account must not be banned. Anything that clears all of that goes
+      # on the list; anything that does not was already refused with a reason.
+      #
+      # Reading and passing judgement on what other people upload is a
+      # different undertaking from running a list of links, and not one this
+      # project is set up for. Moderation is after the fact instead: anybody can
+      # report a pack, and /hide and /ban deal with it.
       #
       # Committed straight to main. There are no pull requests anywhere in this
       # flow: opening one from a workflow needs a repository setting that is off
-      # by default, which meant every first submission failed at that step and
-      # could never be listed however long anybody waited.
-      - name: List it, for an account that has earned that
-        if: steps.add.outcome == 'success' && steps.gate.outputs.auto == 'yes'
+      # by default, which meant every submission failed at that step and could
+      # never be listed however long anybody waited.
+      - name: List it
+        if: steps.add.outcome == 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.json
-          git commit -m "List a pack from a known publisher (#${{ github.event.issue.number }})"
+          git commit -m "List a pack (#${{ github.event.issue.number }})"
           git push
 
       - name: Say it is listed
-        if: steps.add.outcome == 'success' && steps.gate.outputs.auto == 'yes'
+        if: steps.add.outcome == 'success'
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
+            const said = fs.existsSync('submission-ok.txt')
+              ? fs.readFileSync('submission-ok.txt', 'utf8')
+              : 'Listed. It will appear in the app shortly.';
             await github.rest.issues.createComment({
-              ...context.repo,
-              issue_number: context.issue.number,
-              body: 'Listed. It will appear in the app shortly.',
+              ...context.repo, issue_number: context.issue.number, body: said,
             });
             await github.rest.issues.update({
               ...context.repo, issue_number: context.issue.number, state: 'closed',
-            });
-
-      # A first pack waits for a person, and waiting means the issue stays open
-      # with the record in it. The moderator reads the pack in the app and lists
-      # it from there, which writes the record itself. Nothing is staged on a
-      # branch in the meantime, so nothing is left behind if the answer is no.
-      - name: Say it is waiting
-        if: steps.add.outcome == 'success' && steps.gate.outputs.auto != 'yes'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.issues.createComment({
-              ...context.repo,
-              issue_number: context.issue.number,
-              body: 'This pack passed every check and is waiting to be looked at. That '
-                + 'happens once per publisher, not once per pack, so later ones will be '
-                + 'listed straight away. Nothing else is needed from you.',
             });

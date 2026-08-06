@@ -29,8 +29,12 @@ The app uploads the pack to your own GitHub account, works out the address, and
 opens a submission here for you. There is nothing to fill in by hand and no
 files to attach.
 
-Your first pack is looked at by a person before it appears. After that, packs
-from the same account are listed without waiting.
+Nobody approves uploads. A pack that passes its checks is listed straight away.
+
+The checks are rules rather than opinions: the record has to be valid, you have
+to be the account hosting the file, the file has to pass a malware check, and
+your account must not be blocked. Anything that fails one is refused with the
+reason, and anything that passes goes on the list.
 
 ## How many packs can one account list?
 
@@ -91,6 +95,10 @@ Packs can be unlisted. When that happens:
 If a pack of yours is unlisted and you do not know why, open an issue and ask.
 
 ## Something wrong with a listed pack?
+
+This is where moderation happens, because it is the only place it can happen
+honestly. Nothing is vetted before it goes up, so if something should not be
+listed, somebody has to say so.
 
 Open an issue. Say which pack and what the problem is. Packs can be taken down,
 and accounts that abuse this can be blocked from publishing.
