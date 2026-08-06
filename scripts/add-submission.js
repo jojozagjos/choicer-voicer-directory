@@ -17,7 +17,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const { validateRecord, validateIndex, ownerOfDownload } = require('./directory');
+const {
+  validateRecord, validateIndex, ownerOfDownload, roomForAnother,
+} = require('./directory');
 
 const [bodyFile, issueAuthor] = process.argv.slice(2);
 
@@ -84,6 +86,18 @@ if (listed('banned').includes(author)) {
 const indexPath = path.join(__dirname, '..', 'index.json');
 const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
 
+// How many listings one account may hold. The files are on the publisher's own
+// GitHub and cost this repository nothing; the directory is one JSON file that
+// every copy of the app downloads, and one account filling it makes it slow for
+// everyone and buries every other author.
+const room = roomForAnother(index.packs, record.author, record.id);
+if (!room.ok) {
+  refuse(`You already have **${room.held}** packs listed, which is the most one account can `
+    + `hold (${room.limit}).\n\nUpdating a pack you have already published does not count `
+    + 'towards this, so improving one of those is always fine. To list something new, take one '
+    + 'of the existing ones down first by opening an issue here.');
+}
+
 const existing = index.packs.findIndex((p) => p.id === record.id);
 if (existing !== -1) {
   // Updating a pack is normal. Replacing somebody else's is not.
@@ -94,6 +108,11 @@ if (existing !== -1) {
   // Published stays as it was; this is the same pack, later.
   record.published = index.packs[existing].published;
   record.downloads = index.packs[existing].downloads || 0;
+  // A pack that was taken down stays down. A submitted record always claims to
+  // be listed, so without this, publishing over a hidden pack would put it back
+  // and be the easiest way there is to undo a moderator's decision unnoticed.
+  record.listed = index.packs[existing].listed !== false
+    && !listed('hidden').includes(record.id.toLowerCase());
   index.packs[existing] = record;
 } else {
   index.packs.push(record);
@@ -101,9 +120,9 @@ if (existing !== -1) {
 
 // One entry per pack, whatever happened on the way here.
 //
-// Replacing by id above is not enough on its own. Two submissions for the same
-// pack each branch from main before either is merged, so neither sees the
-// other's entry, and merging both leaves the pack listed twice. This is the
+// Replacing by id above is not enough on its own. It only catches a duplicate
+// that is already in the file being read; two runs that start before either has
+// written can each see an index without the other's entry. This is the
 // backstop: after every change, the newest record for an id wins and the rest
 // are dropped.
 const newest = new Map();

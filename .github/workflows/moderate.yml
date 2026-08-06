@@ -28,16 +28,6 @@ jobs:
         with:
           node-version: '20'
 
-      # Fetched from the app rather than kept here. The directory has to refuse
-      # exactly what the app refuses, and two copies of that rule drift the
-      # moment one of them is edited — which is not noticed until something
-      # invalid is listed, or something valid is turned away.
-      - name: Fetch the validator from the app
-        run: |
-          base=https://raw.githubusercontent.com/jojozagjos/Choicer-Voicer-Content-Manager/main/src/main
-          curl -fsSL "$base/directory.js" -o scripts/directory.js
-          curl -fsSL "$base/linkhealth.js" -o scripts/linkhealth.js
-
       - name: Ask GitHub what this person is allowed to do
         id: who
         uses: actions/github-script@v7
@@ -97,4 +87,21 @@ jobs:
               ...context.repo,
               issue_number: context.issue.number,
               body: said,
+            });
+
+      # An issue the app opened purely to carry a command has nothing left to do
+      # once the command has run, and leaving it open means the list of open
+      # issues stops being a list of things that need attention.
+      #
+      # Only ones labelled `moderation`, which are the ones opened for this and
+      # nothing else. A command typed on a submission, or in a conversation,
+      # leaves that issue exactly where it was.
+      - name: Close a command that has been carried out
+        if: steps.run.outcome == 'success'
+          && contains(github.event.issue.labels.*.name, 'moderation')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              ...context.repo, issue_number: context.issue.number, state: 'closed',
             });

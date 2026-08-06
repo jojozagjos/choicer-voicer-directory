@@ -3,9 +3,10 @@ name: Pack submission
 # Runs when the app opens a submission issue. Validates the record, and either
 # adds it to index.json or says on the issue what was wrong.
 #
-# Deliberately does not merge anything on its own. The workflow prepares the
-# change and a person presses the button, which is the whole of the moderation
-# story until there is enough traffic to justify more.
+# A publisher nobody has looked at yet gets no further than validation: the
+# issue stays open and a moderator lists the pack from inside the app, which
+# writes the record with their own account. Once a publisher has been looked at
+# once, later packs from them are listed here without waiting.
 
 on:
   issues:
@@ -14,7 +15,6 @@ on:
 permissions:
   contents: write
   issues: write
-  pull-requests: write
 
 jobs:
   review:
@@ -37,7 +37,6 @@ jobs:
         run: |
           base=https://raw.githubusercontent.com/jojozagjos/Choicer-Voicer-Content-Manager/main/src/main
           curl -fsSL "$base/directory.js" -o scripts/directory.js
-          curl -fsSL "$base/linkhealth.js" -o scripts/linkhealth.js
 
       - name: Read the issue
         env:
@@ -98,8 +97,7 @@ jobs:
             core.setFailed('refused by the malware check');
       # Whether this account has earned listing without waiting. Decided by
       # add-submission.js, which knows the trust rules; this only reads its
-      # answer. Without this step the answer was written and never looked at,
-      # so every submission queued for review including trusted ones.
+      # answer.
       - name: Does this still need a person?
         id: gate
         if: steps.add.outcome == 'success'
@@ -108,54 +106,46 @@ jobs:
       # A publisher who has already had a pack read once does not need every
       # later one read too. One human look per publisher, not per pack.
       #
-      # Committed straight to main rather than through a pull request. A pull
-      # request that is going to be merged immediately is a pull request for
-      # nobody, and opening one needs a repository setting that is off by
-      # default — which meant every submission failed here rather than being
-      # listed.
+      # Committed straight to main. There are no pull requests anywhere in this
+      # flow: opening one from a workflow needs a repository setting that is off
+      # by default, which meant every first submission failed at that step and
+      # could never be listed however long anybody waited.
       - name: List it, for an account that has earned that
         if: steps.add.outcome == 'success' && steps.gate.outputs.auto == 'yes'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.json
-          git commit -m "Pack submission #${{ github.event.issue.number }}"
+          git commit -m "List a pack from a known publisher (#${{ github.event.issue.number }})"
           git push
 
-      - name: Open the change for review
-        id: pr
-        if: steps.add.outcome == 'success' && steps.gate.outputs.auto != 'yes'
-        continue-on-error: true
-        uses: peter-evans/create-pull-request@v6
-        with:
-          # Derived from the issue number, not the issue's own title. A title is
-          # a stranger's text and would otherwise land in a commit message, a
-          # branch name and a PR title unchecked. The pack's real name is in the
-          # record, which has been validated.
-          commit-message: "Pack submission #${{ github.event.issue.number }}"
-          title: "Pack submission #${{ github.event.issue.number }}"
-          body: |
-            From #${{ github.event.issue.number }}.
-
-            The record validated and the author matches the account hosting the
-            file. **Review the pack itself before merging.** Validation checks
-            the shape of the record, not what is inside the pack.
-          branch: submission/${{ github.event.issue.number }}
-          delete-branch: true
-
-      # Said on the issue rather than left in a log nobody opens. Opening a pull
-      # request needs "Allow GitHub Actions to create and approve pull requests"
-      # under Settings, Actions, General, and it is off by default.
-      - name: Say if the review change could not be opened
-        if: steps.pr.outcome == 'failure'
+      - name: Say it is listed
+        if: steps.add.outcome == 'success' && steps.gate.outputs.auto == 'yes'
         uses: actions/github-script@v7
         with:
           script: |
             await github.rest.issues.createComment({
               ...context.repo,
               issue_number: context.issue.number,
-              body: 'This pack validated, but the change that lists it could not be opened '
-                + 'automatically. The repository needs **Allow GitHub Actions to create and '
-                + 'approve pull requests** switched on, under Settings, Actions, General. '
-                + 'Nothing is wrong with the pack.',
+              body: 'Listed. It will appear in the app shortly.',
+            });
+            await github.rest.issues.update({
+              ...context.repo, issue_number: context.issue.number, state: 'closed',
+            });
+
+      # A first pack waits for a person, and waiting means the issue stays open
+      # with the record in it. The moderator reads the pack in the app and lists
+      # it from there, which writes the record itself. Nothing is staged on a
+      # branch in the meantime, so nothing is left behind if the answer is no.
+      - name: Say it is waiting
+        if: steps.add.outcome == 'success' && steps.gate.outputs.auto != 'yes'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: 'This pack passed every check and is waiting to be looked at. That '
+                + 'happens once per publisher, not once per pack, so later ones will be '
+                + 'listed straight away. Nothing else is needed from you.',
             });

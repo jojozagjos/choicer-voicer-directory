@@ -99,11 +99,14 @@ for (const { verb, target } of commands) {
       continue;
     }
     const hiding = verb === 'hide';
-    const moved = hiding ? add(moderation.hidden, id) : drop(moderation.hidden, id);
+    if (hiding) add(moderation.hidden, id);
+    else drop(moderation.hidden, id);
+
     // The flag on the record is what the app reads; the list is what survives a
-    // record being replaced by a later submission.
+    // record being replaced by a later submission. Both are written, because
+    // either one alone leaves a pack that comes back listed after its author
+    // publishes it again.
     pack.listed = !hiding;
-    if (moved || pack.listed === hiding) changed++;
     say(hiding
       ? `**${pack.title}** is no longer listed. The record is kept, so \`/restore ${pack.id}\` puts it back.`
       : `**${pack.title}** is listed again.`);

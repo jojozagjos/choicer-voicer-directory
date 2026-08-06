@@ -1,6 +1,16 @@
-# Fetched from the app at build time, never committed. See the workflows.
+# Fetched from the app when a workflow runs, never committed. See the workflows.
+#
+# The app is the one place the rules live. A copy kept here would be a second
+# definition of what the directory accepts, and the two would disagree the first
+# time either was edited.
 scripts/directory.js
 scripts/linkhealth.js
 
-# Written by the link checker.
-health.json
+# health.json is deliberately NOT ignored.
+#
+# It is the link checker's memory: which packs failed, on which days, and how
+# many times running. Unlisting takes three failures on three separate days, so
+# a run that cannot read what the last run wrote can never reach three and no
+# dead link is ever cleared. It was ignored here once, which also broke the
+# workflow outright, because `git add` on an ignored path fails rather than
+# quietly skipping it.

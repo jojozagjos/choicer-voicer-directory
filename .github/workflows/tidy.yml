@@ -1,12 +1,11 @@
 name: Tidy up
 
-# Closes submissions nobody is going to come back to, and removes the branches
-# left behind by ones that are finished.
+# Closes submissions nobody is going to come back to, and removes any branches
+# left behind by the older design.
 #
 # Without this the repository slowly fills with open issues waiting on authors
-# who moved on, and with submission/* branches that were merged months ago. The
-# queue is meant to be a list of things that need doing, and a queue full of
-# things that do not stops being read.
+# who moved on. The queue is meant to be a list of things that need doing, and a
+# queue full of things that do not stops being read.
 #
 # Nothing here decides anything about a pack. Closing a stale submission is not
 # a refusal — the author can publish again from the app whenever they like, and
@@ -22,7 +21,6 @@ on:
 permissions:
   contents: write
   issues: write
-  pull-requests: write
 
 jobs:
   tidy:
@@ -50,22 +48,16 @@ jobs:
                 "Closing this because nothing has happened on it for two months. This is not a refusal — publish the pack again from the app whenever you are ready and a fresh submission will open."
             done
 
-      - name: Remove branches from finished submissions
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
+      # Nothing creates these any more. Submissions used to be staged on a
+      # branch and merged, which needed a repository setting that is off by
+      # default, so the merge could never happen and the branches piled up
+      # behind submissions that looked stuck for no visible reason. Listing now
+      # writes index.json directly. This step sweeps up what that design left.
+      - name: Remove leftover submission branches
         run: |
           git fetch --prune origin '+refs/heads/submission/*:refs/remotes/origin/submission/*' || true
 
           for ref in $(git branch -r --list 'origin/submission/*' | sed 's|origin/||'); do
-            number="${ref#submission/}"
-            # Only branches whose issue is done with. An open submission still
-            # needs its branch to merge.
-            state=$(gh issue view "$number" --repo "$REPO" --json state --jq .state 2>/dev/null || echo MISSING)
-            if [ "$state" = "OPEN" ]; then
-              echo "keeping $ref (#$number is still open)"
-              continue
-            fi
-            echo "deleting $ref (#$number is $state)"
+            echo "deleting $ref"
             git push origin --delete "$ref" || true
           done
