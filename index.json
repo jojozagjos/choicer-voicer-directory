@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-06T19:45:24.404Z",
+  "updated": "2026-08-06T20:57:09.144Z",
   "packs": [
     {
       "version": 1,
@@ -19,7 +19,8 @@
       "gameVersion": null,
       "downloads": 0,
       "published": "2026-08-06T19:43:10.658Z",
-      "updated": "2026-08-06T19:43:10.658Z"
+      "updated": "2026-08-06T19:43:10.658Z",
+      "listed": false
     }
   ]
 }
