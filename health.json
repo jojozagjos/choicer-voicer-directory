@@ -1,0 +1,20 @@
+{
+  "my-heart-i-loved-her": {
+    "strikes": 1,
+    "listed": true,
+    "archived": false,
+    "firstFailedAt": 1786081786152,
+    "lastOkAt": 1786081786152,
+    "lastCheckedAt": 1786081786152,
+    "lastState": "gone"
+  },
+  "popped-the-ai-bubble": {
+    "strikes": 0,
+    "listed": true,
+    "archived": false,
+    "firstFailedAt": null,
+    "lastOkAt": 1786081786152,
+    "lastCheckedAt": 1786081786152,
+    "lastState": "ok"
+  }
+}
