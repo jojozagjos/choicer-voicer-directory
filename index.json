@@ -1,5 +1,28 @@
 {
   "version": 1,
-  "updated": "2026-08-06T21:30:00.000Z",
-  "packs": []
+  "updated": "2026-08-07T00:08:36.190Z",
+  "packs": [
+    {
+      "version": 1,
+      "id": "my-heart-i-loved-her",
+      "type": "voice",
+      "title": "MY HEART! I LOVED HER!",
+      "summary": "test",
+      "description": "",
+      "author": "jojozagjos",
+      "licence": "unstated",
+      "tags": [],
+      "content": [],
+      "downloadUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-my-heart-i-loved-her/my-heart-i-loved-her.zip",
+      "sha256": "c74ea971b93f201470a30e138b918a628c8f662687878835d97e99f6fd741fe2",
+      "iconUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-my-heart-i-loved-her/my-heart-i-loved-her-icon.png",
+      "iconSha256": "8ce590d999adbc7106da44df596e1b979c05a45a28f28cdc4d67ad9bcd8967a2",
+      "bytes": 3374743,
+      "gameVersion": null,
+      "downloads": 0,
+      "listed": true,
+      "published": "2026-08-07T01:07:35.326Z",
+      "updated": "2026-08-07T01:07:35.326Z"
+    }
+  ]
 }
