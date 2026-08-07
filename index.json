@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-07T02:05:13.849Z",
+  "updated": "2026-08-07T01:07:40.014Z",
   "packs": [
     {
       "version": 1,
@@ -23,6 +23,28 @@
       "listed": false,
       "published": "2026-08-07T01:07:35.326Z",
       "updated": "2026-08-07T01:07:35.326Z"
+    },
+    {
+      "version": 1,
+      "id": "popped-the-ai-bubble",
+      "type": "voice",
+      "title": "Popped the AI Bubble",
+      "summary": "dwa",
+      "description": "dwadwadawdwadwadawd",
+      "author": "jojozagjos",
+      "licence": "unstated",
+      "tags": [],
+      "content": [],
+      "downloadUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-popped-the-ai-bubble/popped-the-ai-bubble.zip",
+      "sha256": "8a381f9cd4f43ab1c7bc8e91041b96fe050973442f1368e1d0ccc6ad2867c459",
+      "iconUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-popped-the-ai-bubble/popped-the-ai-bubble-icon.png",
+      "iconSha256": "474ea981d52a85cab62d2607ab8322381fa7c5c3dec90a220cafeddf7bb7970c",
+      "bytes": 9603811,
+      "gameVersion": null,
+      "downloads": 0,
+      "listed": true,
+      "published": "2026-08-07T02:06:36.425Z",
+      "updated": "2026-08-07T02:06:36.425Z"
     }
   ]
 }
