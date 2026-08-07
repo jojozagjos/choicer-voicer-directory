@@ -18,7 +18,7 @@ const fs = require('fs');
 const path = require('path');
 
 const {
-  validateRecord, validateIndex, roomForAnother,
+  validateRecord, validateIndex, roomForAnother, banStatus,
 } = require('./directory');
 
 const [bodyFile, issueAuthor] = process.argv.slice(2);
@@ -77,10 +77,15 @@ const listed = (key) => (Array.isArray(moderation[key]) ? moderation[key] : [])
 
 const author = record.author.toLowerCase();
 
-if (listed('banned').includes(author)) {
+// Expiry is read here rather than swept up by something scheduled, so a timed
+// ban lifts exactly when it said it would even if nothing has run since.
+const ban = banStatus(moderation, author);
+if (ban.banned) {
   // Said plainly and without argument. Anyone who thinks it is a mistake can
   // say so on the issue, which a moderator will see.
-  refuse('This account cannot publish to the directory.');
+  refuse(ban.until
+    ? `This account cannot publish until ${new Date(ban.until).toISOString().slice(0, 10)}.`
+    : 'This account cannot publish to the directory.');
 }
 
 const indexPath = path.join(__dirname, '..', 'index.json');

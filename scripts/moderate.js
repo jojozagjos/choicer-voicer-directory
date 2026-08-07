@@ -55,8 +55,16 @@ if (!body) {
   process.exit(0);
 }
 
-const commands = [...String(body).matchAll(/^\s*\/(hide|restore|ban|unban|trust|untrust)\s+(\S+)\s*$/gim)]
-  .map((m) => ({ verb: m[1].toLowerCase(), target: m[2].trim() }));
+// A handle, and for /ban optionally how long. Anything after the handle is
+// captured rather than refused by the pattern, so a duration nobody can read
+// gets an explanation instead of the command being silently ignored.
+const commands = [...String(body)
+  .matchAll(/^\s*\/(hide|restore|ban|unban|trust|untrust)\s+(\S+)([^\n]*)$/gim)]
+  .map((m) => ({
+    verb: m[1].toLowerCase(),
+    target: m[2].trim(),
+    rest: (m[3] || '').trim(),
+  }));
 
 if (!commands.length) process.exit(0);
 
@@ -87,9 +95,59 @@ function drop(list, value) {
   return true;
 }
 
+/**
+ * Removes somebody from the banned list, whichever shape their entry is.
+ *
+ * Entries are either a plain handle, meaning forever, or `{ who, until }`. Both
+ * live in the same list so bans written before timed ones existed keep working
+ * without being migrated, which means anything touching the list has to cope
+ * with both.
+ */
+function dropBan(list, handle) {
+  const wanted = String(handle).toLowerCase();
+  const at = list.findIndex((entry) => {
+    const who = typeof entry === 'string' ? entry : (entry && entry.who);
+    return String(who || '').toLowerCase() === wanted;
+  });
+  if (at === -1) return false;
+  list.splice(at, 1);
+  return true;
+}
+
+/**
+ * When a ban should lift, from something a person typed.
+ *
+ * Returns an ISO date, `null` for a permanent ban, or `false` if the words
+ * could not be read. The three are deliberately distinct: reading an unknown
+ * unit as permanent would turn a typo into the harshest outcome available,
+ * silently.
+ */
+function untilFrom(words) {
+  const said = String(words || '').trim();
+  if (!said) return null;
+  if (/^(forever|permanent|permanently)$/i.test(said)) return null;
+
+  const match = said.match(/^(\d+)\s*(h|hr|hrs|hour|hours|d|day|days|w|week|weeks|mo|month|months|y|year|years)$/i);
+  if (!match) return false;
+
+  const amount = Number(match[1]);
+  if (!Number.isFinite(amount) || amount <= 0) return false;
+
+  const hour = 60 * 60 * 1000;
+  const unit = match[2].toLowerCase();
+  const spans = {
+    h: hour, hr: hour, hrs: hour, hour, hours: hour,
+    d: 24 * hour, day: 24 * hour, days: 24 * hour,
+    w: 7 * 24 * hour, week: 7 * 24 * hour, weeks: 7 * 24 * hour,
+    mo: 30 * 24 * hour, month: 30 * 24 * hour, months: 30 * 24 * hour,
+    y: 365 * 24 * hour, year: 365 * 24 * hour, years: 365 * 24 * hour,
+  };
+  return new Date(Date.now() + amount * spans[unit]).toISOString();
+}
+
 let changed = 0;
 
-for (const { verb, target } of commands) {
+for (const { verb, target, rest } of commands) {
   const id = target.toLowerCase();
 
   if (verb === 'hide' || verb === 'restore') {
@@ -116,11 +174,25 @@ for (const { verb, target } of commands) {
 
   if (verb === 'ban' || verb === 'unban') {
     const banning = verb === 'ban';
-    const moved = banning ? add(moderation.banned, id) : drop(moderation.banned, id);
-    if (!moved) {
-      say(`@${target} was already ${banning ? 'banned' : 'not banned'}.`);
+
+    // Everything after the handle is how long for. `/ban someone 7d` is a week,
+    // `/ban someone` is forever. A wrong unit is refused rather than quietly
+    // read as forever, because the difference between a week and permanent is
+    // not something to guess at on somebody's behalf.
+    const until = banning ? untilFrom(rest) : null;
+    if (banning && until === false) {
+      say(`I could not read "${rest}" as a length of time. Use something like \`7d\`, `
+        + '`3w`, `6mo`, or leave it off for a permanent ban.');
       continue;
     }
+
+    // Written afresh rather than added to, so re-banning somebody changes how
+    // long for instead of doing nothing because they are on the list already.
+    dropBan(moderation.banned, id);
+    if (banning) moderation.banned.push(until ? { who: id, until } : id);
+    moderation.banned.sort((a, b) =>
+      String(a.who || a).localeCompare(String(b.who || b)));
+
     if (banning) {
       // Being banned and being trusted are contradictory, and leaving both set
       // would mean the outcome depended on which check ran first.
@@ -130,7 +202,11 @@ for (const { verb, target } of commands) {
         pack.listed = false;
         add(moderation.hidden, pack.id.toLowerCase());
       }
-      say(`@${target} is banned and ${theirs.length} pack(s) of theirs are no longer listed.`);
+      const how = until
+        ? `until ${new Date(until).toISOString().slice(0, 10)}`
+        : 'permanently';
+      say(`@${target} is banned ${how} and ${theirs.length} pack(s) of theirs are no longer `
+        + 'listed. Their packs stay hidden after the ban lifts until restored one by one.');
     } else {
       say(`@${target} is no longer banned. Packs of theirs stay hidden until restored one by one.`);
     }
@@ -140,7 +216,7 @@ for (const { verb, target } of commands) {
 
   if (verb === 'trust' || verb === 'untrust') {
     const trusting = verb === 'trust';
-    if (trusting && moderation.banned.some((b) => b === id)) {
+    if (trusting && moderation.banned.some((b) => String(b.who || b).toLowerCase() === id)) {
       say(`@${target} is banned, so they cannot be trusted. Unban them first.`);
       continue;
     }

@@ -96,6 +96,15 @@ If a pack of yours is unlisted and you do not know why, open an issue and ask.
 
 ## Something wrong with a listed pack?
 
+Report it from the app: there is a button on every listed pack, and one on a
+publisher for the account behind them. A report is opened under your own GitHub
+account and is not anonymous, because it asks for somebody's work to come off a
+list and they can see who asked.
+
+An account can be blocked for a week, a month, three months, a year, or for
+good. A timed block lifts on its own the moment it runs out. Packs taken down
+stay down after it lifts, and are restored one at a time.
+
 This is where moderation happens, because it is the only place it can happen
 honestly. Nothing is vetted before it goes up, so if something should not be
 listed, somebody has to say so.
