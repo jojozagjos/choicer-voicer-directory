@@ -1,25 +1,57 @@
 name: Pack submission
 
-# Runs when the app opens a submission issue. Validates the record, and either
-# adds it to index.json or says on the issue what was wrong.
-#
-# A publisher nobody has looked at yet gets no further than validation: the
-# issue stays open and a moderator lists the pack from inside the app, which
-# writes the record with their own account. Once a publisher has been looked at
-# once, later packs from them are listed here without waiting.
+# Runs when the app opens a submission issue. Validates the record and either
+# adds it to index.json or says on the issue what was wrong. Nobody approves
+# anything: a pack that passes its checks is listed here and the issue closed.
 
 on:
   issues:
-    types: [opened, edited]
+    # `labeled` as well as the obvious two, and that is not belt and braces.
+    #
+    # The app creates the issue and applies its label in a single API call, and
+    # GitHub does not always have the label attached by the time the `opened`
+    # event is sent; labelling arrives moments later as its own event. So the
+    # payload for `opened` can carry an empty labels array for an issue that
+    # very much has one.
+    types: [opened, edited, labeled]
 
 permissions:
   contents: write
   issues: write
 
 jobs:
+  # Whether this issue is a submission at all, decided in a job of its own.
+  #
+  # This used to be a job-level `if` reading the labels straight off the event,
+  # and it silently answered false for every real submission because of the race
+  # above: the runs all completed as "skipped" and no pack was ever listed. A
+  # condition that cannot be seen when it is wrong is worse than one that costs
+  # a few seconds of runner time, so this decides in the open and says why.
+  triage:
+    runs-on: ubuntu-latest
+    outputs:
+      submission: ${{ steps.look.outputs.submission }}
+    steps:
+      - id: look
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue || {};
+            const labels = (issue.labels || []).map((l) => l.name);
+            // The record itself is the second answer. A submission is an issue
+            // with a fenced json block the app wrote, whatever the labels have
+            // caught up to, so a missing label cannot lose a real pack.
+            const hasRecord = /```json/.test(issue.body || '');
+            const submission = labels.includes('submission') || hasRecord;
+
+            core.info(`labels: ${JSON.stringify(labels)}`);
+            core.info(`has a record: ${hasRecord}`);
+            core.info(`treating as a submission: ${submission}`);
+            core.setOutput('submission', submission ? 'yes' : 'no');
+
   review:
-    # Only issues the app labelled. Anything else is a normal issue.
-    if: contains(github.event.issue.labels.*.name, 'submission')
+    needs: triage
+    if: needs.triage.outputs.submission == 'yes'
     runs-on: ubuntu-latest
 
     steps:

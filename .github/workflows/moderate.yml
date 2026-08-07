@@ -16,9 +16,30 @@ permissions:
   issues: write
 
 jobs:
+  # Whether this comment is a command, decided in the open.
+  #
+  # This was a job-level `if` on the comment body, and every run completed as
+  # "skipped" while real commands went uncarried out. A condition that cannot be
+  # inspected when it is wrong costs more than the few seconds of runner time it
+  # saves, so the answer is worked out in a step that says what it saw.
+  triage:
+    runs-on: ubuntu-latest
+    outputs:
+      command: ${{ steps.look.outputs.command }}
+    steps:
+      - id: look
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = (context.payload.comment || {}).body || '';
+            const command = /^\s*\/(hide|restore|ban|unban|trust|untrust)\s+\S+/im.test(body);
+            core.info(`comment starts: ${JSON.stringify(body.slice(0, 60))}`);
+            core.info(`treating as a command: ${command}`);
+            core.setOutput('command', command ? 'yes' : 'no');
+
   command:
-    # Cheap filter first, so ordinary conversation does not start a runner.
-    if: startsWith(github.event.comment.body, '/')
+    needs: triage
+    if: needs.triage.outputs.command == 'yes'
     runs-on: ubuntu-latest
 
     steps:
