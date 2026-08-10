@@ -16,5 +16,23 @@
     "lastOkAt": 1786252661233,
     "lastCheckedAt": 1786252661233,
     "lastState": "ok"
+  },
+  "homer-let-the-barts-out": {
+    "strikes": 0,
+    "listed": true,
+    "archived": false,
+    "firstFailedAt": null,
+    "lastOkAt": 1786340582634,
+    "lastCheckedAt": 1786340582634,
+    "lastState": "ok"
+  },
+  "i-ll-write-that-down": {
+    "strikes": 0,
+    "listed": true,
+    "archived": false,
+    "firstFailedAt": null,
+    "lastOkAt": 1786340582634,
+    "lastCheckedAt": 1786340582634,
+    "lastState": "ok"
   }
 }
