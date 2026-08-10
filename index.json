@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-10T06:39:55.252Z",
+  "updated": "2026-08-10T06:53:46.742Z",
   "packs": [
     {
       "version": 1,
@@ -77,6 +77,33 @@
       "published": "2026-08-10T01:17:20.440Z",
       "updated": "2026-08-10T01:17:20.440Z",
       "countedUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-i-ll-write-that-down/i-ll-write-that-down.zip"
+    },
+    {
+      "version": 1,
+      "id": "we-don-t-negotiate-with-terrorists",
+      "type": "voice",
+      "title": "We Don't Negotiate With Terrorists",
+      "summary": "Tropic Thunder Les Grossman Scene",
+      "description": "Speedman/Simple Jack is an actor whose been kidnapped by drug traffickers. His agent, Peck is negotiating with Hollywood to bring him back.",
+      "author": "Reagan-Val",
+      "licence": "unstated",
+      "tags": [],
+      "content": [
+        "drugs",
+        "language"
+      ],
+      "downloadUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-we-don-t-negotiate-with-terrorists/we-don-t-negotiate-with-terrorists.zip",
+      "sha256": "20585092e15259fca2f93bdb7ab8a47a23a024d09f71ce7b1c411a256072b5ce",
+      "iconUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-we-don-t-negotiate-with-terrorists/we-don-t-negotiate-with-terrorists-icon.png",
+      "iconSha256": "d9be2a9fa23247659fdd807c6a8494d8c1a0dde50e705e0ea733bcf84eaed8d2",
+      "bytes": 50834140,
+      "gameVersion": null,
+      "downloads": 0,
+      "downloadsBase": 0,
+      "countedUrl": null,
+      "listed": true,
+      "published": "2026-08-10T06:52:48.054Z",
+      "updated": "2026-08-10T06:52:48.054Z"
     }
   ]
 }
