@@ -62,6 +62,15 @@ jobs:
             });
             core.setOutput('permission', data.permission);
 
+            // Everyone who can write here, so none of them can be banned.
+            // Asked of GitHub rather than kept as a list in the repository: a
+            // hand-maintained one goes stale, and a stale one either protects
+            // somebody who has left or fails to protect somebody who joined.
+            const people = await github.paginate(github.rest.repos.listCollaborators, {
+              ...context.repo, permission: 'push', per_page: 100,
+            });
+            core.setOutput('moderators', people.map((p) => p.login).join(','));
+
       - name: Read the comment
         env:
           BODY: ${{ github.event.comment.body }}
@@ -78,6 +87,7 @@ jobs:
         env:
           COMMENTER: ${{ github.event.comment.user.login }}
           PERMISSION: ${{ steps.who.outputs.permission }}
+          MODERATORS: ${{ steps.who.outputs.moderators }}
         run: node scripts/moderate.js comment.txt "$COMMENTER" "$PERMISSION"
 
       - name: Commit the change

@@ -36,6 +36,21 @@ const body = bodyFile && fs.existsSync(bodyFile) ? fs.readFileSync(bodyFile, 'ut
 /** Only these can moderate. GitHub decides who they are, not this file. */
 const ALLOWED_PERMISSIONS = new Set(['admin', 'write', 'maintain']);
 
+/**
+ * Everyone who can write here, so that none of them can be banned.
+ *
+ * Asked of GitHub by the workflow and passed in, rather than kept as a list in
+ * this repository. A list that has to be maintained by hand is a list that goes
+ * stale, and the stale version would either protect somebody who has left or
+ * fail to protect somebody who has joined.
+ */
+const MODERATORS = new Set(
+  String(process.env.MODERATORS || '')
+    .split(',')
+    .map((name) => name.trim().toLowerCase())
+    .filter(Boolean),
+);
+
 const MODERATION = path.join(__dirname, '..', 'moderation.json');
 const INDEX = path.join(__dirname, '..', 'index.json');
 
@@ -174,6 +189,21 @@ for (const { verb, target, rest } of commands) {
 
   if (verb === 'ban' || verb === 'unban') {
     const banning = verb === 'ban';
+
+    // A moderator cannot be banned, including by themselves.
+    //
+    // Banning is a thing moderators do to publishers, and every moderator is
+    // also a publisher, so nothing in the shape of the data stops one being
+    // aimed at another. The cost of getting that wrong is high and asymmetric:
+    // a ban applied to somebody who can write here is either an accident that
+    // locks out a colleague or a deliberate act during a disagreement, and in
+    // both cases the answer is that this is not the tool for it. Changing who
+    // may moderate is done in the repository's own settings, where it belongs.
+    if (banning && MODERATORS.has(id)) {
+      say(`@${target} can write to this repository, so they cannot be banned here. `
+        + 'Change who has access in the repository settings instead.');
+      continue;
+    }
 
     // Everything after the handle is how long for. `/ban someone 7d` is a week,
     // `/ban someone` is forever. A wrong unit is refused rather than quietly
