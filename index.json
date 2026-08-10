@@ -1,7 +1,31 @@
 {
   "version": 1,
-  "updated": "2026-08-10T05:43:03.136Z",
+  "updated": "2026-08-10T06:37:21.156Z",
   "packs": [
+    {
+      "version": 1,
+      "id": "deku-stop-tickaling-me",
+      "type": "voice",
+      "title": "Deku Stop Tickaling Me!",
+      "summary": "Deku and Bakugo bonding",
+      "description": "",
+      "author": "Reagan-Val",
+      "licence": "unstated",
+      "tags": [],
+      "content": [],
+      "downloadUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-deku-stop-tickaling-me/deku-stop-tickaling-me.zip",
+      "sha256": "a3607425c0922b76f81091a8598ea879b16da54863c9c0b4bd81e1f301a7118d",
+      "iconUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-deku-stop-tickaling-me/deku-stop-tickaling-me-icon.png",
+      "iconSha256": "899709133d3572b2aa9548fbd11033e66a395ab84203f73c379ab569ce43f541",
+      "bytes": 41462359,
+      "gameVersion": null,
+      "downloads": 0,
+      "downloadsBase": 0,
+      "countedUrl": null,
+      "listed": true,
+      "published": "2026-08-10T06:36:21.599Z",
+      "updated": "2026-08-10T06:36:21.599Z"
+    },
     {
       "version": 1,
       "id": "homer-let-the-barts-out",
