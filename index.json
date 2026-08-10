@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-10T00:52:23.242Z",
+  "updated": "2026-08-10T00:56:15.170Z",
   "packs": [
     {
       "version": 1,
@@ -20,15 +20,15 @@
       ],
       "content": [],
       "downloadUrl": "https://github.com/kanyesaunders-afk/choicer-voicer-packs/releases/download/pack-homer-let-the-barts-out/homer-let-the-barts-out.zip",
-      "sha256": "68aac521af2aa56a7dff8ca7f35859033a3e62c444dcaa477a97c4420c3aac8a",
+      "sha256": "115e9ff8989f58abea977258305f0891808615b38300c0f41e8b027712beb62e",
       "iconUrl": "https://github.com/kanyesaunders-afk/choicer-voicer-packs/releases/download/pack-homer-let-the-barts-out/homer-let-the-barts-out-icon.png",
       "iconSha256": "48f8a17f8cbcb04083fd6534bbb555b9e51b8966e34fc81fc2cac403deef64e7",
-      "bytes": 13781968,
+      "bytes": 13896795,
       "gameVersion": null,
       "downloads": 0,
       "listed": true,
       "published": "2026-08-10T00:41:46.847Z",
-      "updated": "2026-08-10T00:52:04.908Z"
+      "updated": "2026-08-10T00:55:47.830Z"
     },
     {
       "version": 1,
