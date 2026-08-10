@@ -22,6 +22,11 @@ on:
 permissions:
   contents: write
 
+# Shared with the counting job, so the two never write index.json at once.
+concurrency:
+  group: directory-writes
+  cancel-in-progress: false
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -48,18 +53,11 @@ jobs:
         continue-on-error: true
         run: node scripts/check-links.js index.json --health health.json
 
-      # There is no server to be told that somebody installed a pack, so the
-      # count sat at whatever it was written as, which was zero, forever.
-      # GitHub counts downloads of release assets already, so this asks it once
-      # a day rather than keeping a tally of its own. Allowed to fail without
-      # failing the run: a stale count is worth more than a link check that
-      # did not get committed.
-      - name: Count downloads
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/count-downloads.js index.json
-
+      # Counting downloads used to happen here too, and has moved to its own
+      # workflow. This one's schedule is part of its rule: a pack is hidden
+      # after three confirmed failures on three separate days, so it has to run
+      # daily and no more often. Counting wants to run far more often than
+      # that, and the two requirements do not fit in one job.
       - name: Commit what changed
         run: |
           if [ -z "$(git status --porcelain index.json health.json)" ]; then
@@ -69,5 +67,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.json health.json
-          git commit -m "Link check and download counts"
-          git push
+          git commit -m "Link check"
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "push rejected, rebasing and trying again"
+            git pull --rebase --autostash
+          done
+          echo "could not push after three attempts"
+          exit 1

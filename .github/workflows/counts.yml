@@ -1,0 +1,68 @@
+name: Download counts
+
+# Refreshes how many times each listed pack has been downloaded.
+#
+# Separate from the link check on purpose, and not merged back into it. The
+# link check hides a pack after three confirmed failures on three *separate
+# days*, so its schedule is part of its rule; running that job more often would
+# quietly turn three days into three hours and start hiding packs over a bad
+# afternoon at somebody's host.
+#
+# Counting has no such constraint. It reads a number GitHub already keeps and
+# writes it down, so it can run as often as is useful. Every three hours bounds
+# how stale a count can look to somebody who has just installed a pack, which
+# was a day when this lived in the link check.
+
+on:
+  schedule:
+    # Every three hours, offset off the hour so it is not competing with
+    # everything else in the world that runs at :00.
+    - cron: '23 */3 * * *'
+  workflow_dispatch:
+
+# Only one of these at a time. Two runs writing index.json and pushing would
+# race, and the loser would be rejected for a stale ref.
+concurrency:
+  group: directory-writes
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Count downloads
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/count-downloads.js index.json
+
+      - name: Commit what changed
+        run: |
+          if [ -z "$(git status --porcelain index.json)" ]; then
+            echo "no counts moved"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json
+          git commit -m "Download counts"
+          # Something else may have written to the index between the checkout
+          # and now, most likely a pack being listed. Rebasing onto it is right:
+          # this job's change is one field per pack and cannot conflict with
+          # adding a record, so it should follow rather than fail.
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "push rejected, rebasing and trying again"
+            git pull --rebase --autostash
+          done
+          echo "could not push after three attempts"
+          exit 1

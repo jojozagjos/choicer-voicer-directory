@@ -113,6 +113,16 @@ if (existing !== -1) {
   // Published stays as it was; this is the same pack, later.
   record.published = index.packs[existing].published;
   record.downloads = index.packs[existing].downloads || 0;
+
+  // An update is a new file on a new release, and GitHub starts that file's
+  // counter at zero. Carrying the total across without also carrying the
+  // counting job's bookkeeping left the next count run replacing the total
+  // with the new asset's handful of downloads, so a popular pack dropped to
+  // nothing the day its author fixed a caption. Banking the total here is what
+  // the next run adds to, and clearing the counted address is what tells it
+  // this is a file it has not counted before.
+  record.downloadsBase = record.downloads;
+  record.countedUrl = null;
   // A pack that was taken down stays down. A submitted record always claims to
   // be listed, so without this, publishing over a hidden pack would put it back
   // and be the easiest way there is to undo a moderator's decision unnoticed.
