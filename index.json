@@ -1,7 +1,31 @@
 {
   "version": 1,
-  "updated": "2026-08-10T00:18:25.941Z",
+  "updated": "2026-08-10T00:42:08.316Z",
   "packs": [
+    {
+      "version": 1,
+      "id": "homer-let-the-barts-out",
+      "type": "voice",
+      "title": "Homer Let the Barts Out",
+      "summary": "Playtest",
+      "description": "",
+      "author": "kanyesaunders-afk",
+      "licence": "unstated",
+      "tags": [],
+      "content": [
+        "language"
+      ],
+      "downloadUrl": "https://github.com/kanyesaunders-afk/choicer-voicer-packs/releases/download/pack-homer-let-the-barts-out/homer-let-the-barts-out.zip",
+      "sha256": "68aac521af2aa56a7dff8ca7f35859033a3e62c444dcaa477a97c4420c3aac8a",
+      "iconUrl": "https://github.com/kanyesaunders-afk/choicer-voicer-packs/releases/download/pack-homer-let-the-barts-out/homer-let-the-barts-out-icon.png",
+      "iconSha256": "48f8a17f8cbcb04083fd6534bbb555b9e51b8966e34fc81fc2cac403deef64e7",
+      "bytes": 13781968,
+      "gameVersion": null,
+      "downloads": 0,
+      "listed": true,
+      "published": "2026-08-10T00:41:46.847Z",
+      "updated": "2026-08-10T00:41:46.847Z"
+    },
     {
       "version": 1,
       "id": "i-ll-write-that-down",
