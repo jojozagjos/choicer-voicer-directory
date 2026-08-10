@@ -1,5 +1,28 @@
 {
   "version": 1,
-  "updated": "2026-08-10T00:42:13.364Z",
-  "packs": []
+  "updated": "2026-08-10T00:18:25.941Z",
+  "packs": [
+    {
+      "version": 1,
+      "id": "i-ll-write-that-down",
+      "type": "voice",
+      "title": "I'll Write That Down",
+      "summary": "UGHH I'll Write That Down",
+      "description": "",
+      "author": "jojozagjos",
+      "licence": "unstated",
+      "tags": [],
+      "content": [],
+      "downloadUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-i-ll-write-that-down/i-ll-write-that-down.zip",
+      "sha256": "453c3ec323265c0004803ade1c880c1817c354390c46d58f3ce00756cab534ff",
+      "iconUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-i-ll-write-that-down/i-ll-write-that-down-icon.png",
+      "iconSha256": "886ff0feb3dce98cdc1c3067ae95ab8c754c9f69ac2de4c3756436708fa97885",
+      "bytes": 11012077,
+      "gameVersion": null,
+      "downloads": 0,
+      "listed": true,
+      "published": "2026-08-10T01:17:20.440Z",
+      "updated": "2026-08-10T01:17:20.440Z"
+    }
+  ]
 }
