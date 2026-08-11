@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-11T02:31:34.528Z",
+  "updated": "2026-08-11T02:44:47.877Z",
   "packs": [
     {
       "version": 1,
@@ -73,10 +73,11 @@
       "bytes": 11012077,
       "gameVersion": null,
       "downloads": 5,
+      "downloadsBase": 5,
+      "countedUrl": null,
       "listed": true,
       "published": "2026-08-10T01:17:20.440Z",
-      "updated": "2026-08-10T01:17:20.440Z",
-      "countedUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-i-ll-write-that-down/i-ll-write-that-down.zip"
+      "updated": "2026-08-11T03:43:44.445Z"
     },
     {
       "version": 1,
