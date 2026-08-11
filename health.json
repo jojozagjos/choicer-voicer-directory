@@ -22,8 +22,8 @@
     "listed": true,
     "archived": false,
     "firstFailedAt": null,
-    "lastOkAt": 1786340582634,
-    "lastCheckedAt": 1786340582634,
+    "lastOkAt": 1786425675655,
+    "lastCheckedAt": 1786425675655,
     "lastState": "ok"
   },
   "i-ll-write-that-down": {
@@ -31,8 +31,26 @@
     "listed": true,
     "archived": false,
     "firstFailedAt": null,
-    "lastOkAt": 1786340582634,
-    "lastCheckedAt": 1786340582634,
+    "lastOkAt": 1786425675655,
+    "lastCheckedAt": 1786425675655,
+    "lastState": "ok"
+  },
+  "deku-stop-tickaling-me": {
+    "strikes": 0,
+    "listed": true,
+    "archived": false,
+    "firstFailedAt": null,
+    "lastOkAt": 1786425675655,
+    "lastCheckedAt": 1786425675655,
+    "lastState": "ok"
+  },
+  "we-don-t-negotiate-with-terrorists": {
+    "strikes": 0,
+    "listed": true,
+    "archived": false,
+    "firstFailedAt": null,
+    "lastOkAt": 1786425675655,
+    "lastCheckedAt": 1786425675655,
     "lastState": "ok"
   }
 }
