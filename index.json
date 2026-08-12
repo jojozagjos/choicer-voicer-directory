@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-12T13:53:04.357Z",
+  "updated": "2026-08-12T22:06:19.250Z",
   "packs": [
     {
       "version": 1,
@@ -49,7 +49,7 @@
       "iconSha256": "48f8a17f8cbcb04083fd6534bbb555b9e51b8966e34fc81fc2cac403deef64e7",
       "bytes": 13781967,
       "gameVersion": null,
-      "downloads": 8,
+      "downloads": 9,
       "listed": true,
       "published": "2026-08-10T00:41:46.847Z",
       "updated": "2026-08-10T01:01:41.574Z",
