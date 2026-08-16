@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-16T21:07:32.004Z",
+  "updated": "2026-08-16T21:38:49.091Z",
   "packs": [
     {
       "version": 1,
@@ -49,9 +49,9 @@
       "iconSha256": "48f8a17f8cbcb04083fd6534bbb555b9e51b8966e34fc81fc2cac403deef64e7",
       "bytes": 13831096,
       "gameVersion": null,
-      "downloads": 15,
+      "downloads": 17,
       "downloadsBase": 15,
-      "countedUrl": null,
+      "countedUrl": "https://github.com/kanyesaunders-afk/choicer-voicer-packs/releases/download/pack-homer-let-the-barts-out/homer-let-the-barts-out.zip",
       "listed": true,
       "published": "2026-08-10T00:41:46.847Z",
       "updated": "2026-08-16T21:07:12.060Z"
@@ -75,7 +75,7 @@
       "gameVersion": null,
       "downloads": 17,
       "downloadsBase": 17,
-      "countedUrl": null,
+      "countedUrl": "https://github.com/jojozagjos/choicer-voicer-packs/releases/download/pack-i-ll-write-that-down/i-ll-write-that-down.zip",
       "listed": true,
       "published": "2026-08-10T01:17:20.440Z",
       "updated": "2026-08-16T21:59:44.099Z"
