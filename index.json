@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-17T07:27:08.699Z",
+  "updated": "2026-08-18T03:06:50.161Z",
   "packs": [
     {
       "version": 1,
@@ -79,6 +79,30 @@
       "listed": true,
       "published": "2026-08-10T01:17:20.440Z",
       "updated": "2026-08-16T21:59:44.099Z"
+    },
+    {
+      "version": 1,
+      "id": "shut-up-mom",
+      "type": "voice",
+      "title": "Shut up Mom!",
+      "summary": "Keith and Clive",
+      "description": "",
+      "author": "Reagan-Val",
+      "licence": "unstated",
+      "tags": [],
+      "content": [],
+      "downloadUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom.zip",
+      "sha256": "d7057fda46af154ba7d0328006ab4353a4b8707e76e893665d5920276bb6b370",
+      "iconUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom-icon.png",
+      "iconSha256": "ea22bdeb30992f1e81683db80dbc6d0055b9dabf38803d7996aa8fb08e6ea4ce",
+      "bytes": 61319868,
+      "gameVersion": null,
+      "downloads": 0,
+      "downloadsBase": 0,
+      "countedUrl": null,
+      "listed": true,
+      "published": "2026-08-18T03:05:39.089Z",
+      "updated": "2026-08-18T03:05:39.089Z"
     },
     {
       "version": 1,
