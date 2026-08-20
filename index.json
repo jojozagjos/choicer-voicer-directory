@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-19T21:44:53.848Z",
+  "updated": "2026-08-20T02:53:39.731Z",
   "packs": [
     {
       "version": 1,
@@ -79,6 +79,32 @@
       "listed": true,
       "published": "2026-08-10T01:17:20.440Z",
       "updated": "2026-08-16T21:59:44.099Z"
+    },
+    {
+      "version": 1,
+      "id": "looks-like-a-marimeko-now-jjk",
+      "type": "voice",
+      "title": "Looks like a marimeko now..(jjk)",
+      "summary": "The scene from jjk where nobara spils coffee on a shirt",
+      "description": "you can give credit if you want",
+      "author": "tjutluck",
+      "licence": "cc0",
+      "tags": [
+        "anime"
+      ],
+      "content": [],
+      "downloadUrl": "https://github.com/tjutluck/choicer-voicer-packs/releases/download/pack-looks-like-a-marimeko-now-jjk/looks-like-a-marimeko-now-jjk.zip",
+      "sha256": "99e3f2a821adb5c3fcb2d6eae6c6ddca46e5d57c6d49c432d06bb86b61ee88e0",
+      "iconUrl": "https://github.com/tjutluck/choicer-voicer-packs/releases/download/pack-looks-like-a-marimeko-now-jjk/looks-like-a-marimeko-now-jjk-icon.png",
+      "iconSha256": "880d8d5db986a8cf077b1c3d2db83a39a521244c12e4eddd66d14d0ae882034b",
+      "bytes": 22961924,
+      "gameVersion": null,
+      "downloads": 0,
+      "downloadsBase": 0,
+      "countedUrl": null,
+      "listed": true,
+      "published": "2026-08-20T02:53:17.907Z",
+      "updated": "2026-08-20T02:53:17.907Z"
     },
     {
       "version": 1,
