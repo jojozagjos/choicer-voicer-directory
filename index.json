@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-20T13:15:58.743Z",
+  "updated": "2026-08-21T02:01:07.898Z",
   "packs": [
     {
       "version": 1,
@@ -99,7 +99,7 @@
       "iconSha256": "880d8d5db986a8cf077b1c3d2db83a39a521244c12e4eddd66d14d0ae882034b",
       "bytes": 22961924,
       "gameVersion": null,
-      "downloads": 1,
+      "downloads": 2,
       "downloadsBase": 0,
       "countedUrl": "https://github.com/tjutluck/choicer-voicer-packs/releases/download/pack-looks-like-a-marimeko-now-jjk/looks-like-a-marimeko-now-jjk.zip",
       "listed": true,
