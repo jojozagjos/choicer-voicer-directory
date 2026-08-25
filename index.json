@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-24T19:05:01.785Z",
+  "updated": "2026-08-25T01:56:16.894Z",
   "packs": [
     {
       "version": 1,
@@ -49,7 +49,7 @@
       "iconSha256": "48f8a17f8cbcb04083fd6534bbb555b9e51b8966e34fc81fc2cac403deef64e7",
       "bytes": 13831096,
       "gameVersion": null,
-      "downloads": 34,
+      "downloads": 35,
       "downloadsBase": 15,
       "countedUrl": "https://github.com/kanyesaunders-afk/choicer-voicer-packs/releases/download/pack-homer-let-the-barts-out/homer-let-the-barts-out.zip",
       "listed": true,
@@ -123,7 +123,7 @@
       "iconSha256": "ea22bdeb30992f1e81683db80dbc6d0055b9dabf38803d7996aa8fb08e6ea4ce",
       "bytes": 61319868,
       "gameVersion": null,
-      "downloads": 9,
+      "downloads": 10,
       "downloadsBase": 0,
       "countedUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom.zip",
       "listed": true,
