@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-26T19:10:40.015Z",
+  "updated": "2026-08-26T19:11:09.852Z",
   "packs": [
     {
       "version": 1,
@@ -111,12 +111,14 @@
       "id": "shut-up-mom",
       "type": "voice",
       "title": "Shut up Mom!",
-      "summary": "Keith and Clive",
+      "summary": "Key and Peele Sketch",
       "description": "",
       "author": "O-Reagano",
       "licence": "unstated",
       "tags": [],
-      "content": [],
+      "content": [
+        "language"
+      ],
       "downloadUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom.zip",
       "sha256": "d7057fda46af154ba7d0328006ab4353a4b8707e76e893665d5920276bb6b370",
       "iconUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom-icon.png",
@@ -124,11 +126,11 @@
       "bytes": 61319868,
       "gameVersion": null,
       "downloads": 12,
-      "downloadsBase": 0,
-      "countedUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom.zip",
+      "downloadsBase": 12,
+      "countedUrl": null,
       "listed": true,
       "published": "2026-08-18T03:05:39.089Z",
-      "updated": "2026-08-18T03:05:39.089Z"
+      "updated": "2026-08-26T19:10:46.394Z"
     },
     {
       "version": 1,
