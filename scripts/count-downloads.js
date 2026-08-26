@@ -74,7 +74,21 @@ async function askGitHub(path) {
   return res.json();
 }
 
-async function countFor(pack) {
+/**
+ * What GitHub currently says about a listed pack.
+ *
+ * Returns the download count, and the name and address GitHub is using for it
+ * now, which are not always the ones on the listing.
+ *
+ * Somebody who renames their account keeps every old link working, because
+ * GitHub redirects them, so nothing breaks and nothing announces itself. But
+ * the listing still credits the name they had when they published, and the
+ * avatar is fetched by that name, so the directory carries on showing a person
+ * who no longer exists under that name. The API answers with the account as it
+ * is now, and this is the one job that already asks it about every pack every
+ * few hours, so it is the cheapest place to notice.
+ */
+async function lookUp(pack) {
   const parts = partsOf(pack.downloadUrl);
   if (!parts) return null;
 
@@ -83,7 +97,20 @@ async function countFor(pack) {
   );
   const asset = (release.assets || []).find((a) => a.name === parts.file);
   if (!asset) return null;
-  return Number(asset.download_count) || 0;
+
+  // The address the asset reports is the canonical one, so it carries the
+  // account's current name after a rename. The old one still works, but a
+  // listing pointing at a name that has moved on is a listing that will look
+  // wrong to anybody who checks.
+  const nowUrl = typeof asset.browser_download_url === 'string'
+    ? asset.browser_download_url : pack.downloadUrl;
+  const nowParts = partsOf(nowUrl);
+
+  return {
+    downloads: Number(asset.download_count) || 0,
+    owner: nowParts ? nowParts.owner : parts.owner,
+    downloadUrl: nowUrl,
+  };
 }
 
 (async () => {
@@ -96,7 +123,22 @@ async function countFor(pack) {
 
   for (const pack of packs) {
     try {
-      const count = await countFor(pack);
+      const seen = await lookUp(pack);
+      const count = seen === null ? null : seen.downloads;
+
+      // A rename is applied to both at once. They have to agree: the author is
+      // checked against the account that hosts the file, so changing one and
+      // not the other would turn a valid listing into a refused one.
+      if (seen && seen.owner && seen.owner.toLowerCase() !== String(pack.author).toLowerCase()) {
+        console.log(`  ${pack.id}: ${pack.author} is now ${seen.owner}`);
+        pack.author = seen.owner;
+        pack.downloadUrl = seen.downloadUrl;
+        // The file has not changed, so what it has been counted from has not
+        // either; only the way it is spelled has.
+        pack.countedUrl = seen.downloadUrl;
+        changed++;
+      }
+
       if (count === null) {
         console.log(`  ${pack.id}: no release asset found, left at ${pack.downloads || 0}`);
         failed++;
