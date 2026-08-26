@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-26T07:12:51.616Z",
+  "updated": "2026-08-26T20:08:13.776Z",
   "packs": [
     {
       "version": 1,
@@ -15,7 +15,7 @@
       "content": [],
       "downloadUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-deku-stop-tickaling-me/deku-stop-tickaling-me.zip",
       "sha256": "a3607425c0922b76f81091a8598ea879b16da54863c9c0b4bd81e1f301a7118d",
-      "iconUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-deku-stop-tickaling-me/deku-stop-tickaling-me-icon.png",
+      "iconUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-deku-stop-tickaling-me/deku-stop-tickaling-me-icon.png",
       "iconSha256": "899709133d3572b2aa9548fbd11033e66a395ab84203f73c379ab569ce43f541",
       "bytes": 41462359,
       "gameVersion": null,
@@ -49,7 +49,7 @@
       "iconSha256": "48f8a17f8cbcb04083fd6534bbb555b9e51b8966e34fc81fc2cac403deef64e7",
       "bytes": 13831096,
       "gameVersion": null,
-      "downloads": 37,
+      "downloads": 38,
       "downloadsBase": 15,
       "countedUrl": "https://github.com/kanyesaunders-afk/choicer-voicer-packs/releases/download/pack-homer-let-the-barts-out/homer-let-the-barts-out.zip",
       "listed": true,
@@ -119,7 +119,7 @@
       "content": [],
       "downloadUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom.zip",
       "sha256": "d7057fda46af154ba7d0328006ab4353a4b8707e76e893665d5920276bb6b370",
-      "iconUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom-icon.png",
+      "iconUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom-icon.png",
       "iconSha256": "ea22bdeb30992f1e81683db80dbc6d0055b9dabf38803d7996aa8fb08e6ea4ce",
       "bytes": 61319868,
       "gameVersion": null,
@@ -146,7 +146,7 @@
       ],
       "downloadUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-we-don-t-negotiate-with-terrorists/we-don-t-negotiate-with-terrorists.zip",
       "sha256": "20585092e15259fca2f93bdb7ab8a47a23a024d09f71ce7b1c411a256072b5ce",
-      "iconUrl": "https://github.com/Reagan-Val/choicer-voicer-packs/releases/download/pack-we-don-t-negotiate-with-terrorists/we-don-t-negotiate-with-terrorists-icon.png",
+      "iconUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-we-don-t-negotiate-with-terrorists/we-don-t-negotiate-with-terrorists-icon.png",
       "iconSha256": "d9be2a9fa23247659fdd807c6a8494d8c1a0dde50e705e0ea733bcf84eaed8d2",
       "bytes": 50834140,
       "gameVersion": null,

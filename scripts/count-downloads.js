@@ -62,6 +62,34 @@ function partsOf(url) {
   }
 }
 
+/**
+ * The same address under a different account name.
+ *
+ * A record carries two addresses on the author's account: the pack and its
+ * icon. Both are checked against the author, so moving one without the other
+ * leaves a record that contradicts itself and is thrown out by the validator
+ * as an impersonation attempt. That is exactly what happened after the first
+ * version of the rename handling below moved the download and left the icon:
+ * three listings vanished from the directory, and the app said only that it
+ * had dropped some records.
+ *
+ * Returns the address unchanged if it is not one of ours to rewrite.
+ */
+function underOwner(url, owner) {
+  if (typeof url !== 'string' || !url) return url;
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.toLowerCase() !== 'github.com') return url;
+    const bits = parsed.pathname.split('/').filter(Boolean);
+    if (bits.length < 2 || bits[0] === owner) return url;
+    bits[0] = owner;
+    parsed.pathname = `/${bits.join('/')}`;
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 async function askGitHub(path) {
   const res = await fetch(`${API}${path}`, {
     headers: {
@@ -126,17 +154,37 @@ async function lookUp(pack) {
       const seen = await lookUp(pack);
       const count = seen === null ? null : seen.downloads;
 
-      // A rename is applied to both at once. They have to agree: the author is
-      // checked against the account that hosts the file, so changing one and
-      // not the other would turn a valid listing into a refused one.
-      if (seen && seen.owner && seen.owner.toLowerCase() !== String(pack.author).toLowerCase()) {
-        console.log(`  ${pack.id}: ${pack.author} is now ${seen.owner}`);
-        pack.author = seen.owner;
-        pack.downloadUrl = seen.downloadUrl;
-        // The file has not changed, so what it has been counted from has not
-        // either; only the way it is spelled has.
-        pack.countedUrl = seen.downloadUrl;
-        changed++;
+      // Everything on the record that names the account moves together. The
+      // author is checked against both the download and the icon, so a record
+      // where they disagree is refused outright.
+      //
+      // Checked every run rather than only on the run that first notices, so a
+      // record left half moved by an earlier version of this repairs itself
+      // rather than staying invisible until somebody republishes it.
+      if (seen && seen.owner) {
+        const owner = seen.owner;
+        const wasAuthor = String(pack.author || '');
+        const nextUrl = underOwner(seen.downloadUrl, owner);
+        const nextIcon = underOwner(pack.iconUrl, owner);
+
+        const moved = wasAuthor.toLowerCase() !== owner.toLowerCase()
+          || pack.downloadUrl !== nextUrl
+          || pack.iconUrl !== nextIcon;
+
+        if (moved) {
+          if (wasAuthor.toLowerCase() !== owner.toLowerCase()) {
+            console.log(`  ${pack.id}: ${wasAuthor} is now ${owner}`);
+          } else {
+            console.log(`  ${pack.id}: addresses brought back in line with ${owner}`);
+          }
+          pack.author = owner;
+          pack.downloadUrl = nextUrl;
+          if (pack.iconUrl) pack.iconUrl = nextIcon;
+          // The file has not changed, so what it has been counted from has not
+          // either; only the way it is spelled has.
+          pack.countedUrl = nextUrl;
+          changed++;
+        }
       }
 
       if (count === null) {
