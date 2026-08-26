@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-26T19:11:09.852Z",
+  "updated": "2026-08-26T19:11:57.807Z",
   "packs": [
     {
       "version": 1,
@@ -137,8 +137,8 @@
       "id": "we-don-t-negotiate-with-terrorists",
       "type": "voice",
       "title": "We Don't Negotiate With Terrorists",
-      "summary": "Tropic Thunder Les Grossman Scene",
-      "description": "Speedman/Simple Jack is an actor whose been kidnapped by drug traffickers. His agent, Peck is negotiating with Hollywood to bring him back.",
+      "summary": "Tropic Thunder Les Grossman",
+      "description": "",
       "author": "O-Reagano",
       "licence": "unstated",
       "tags": [],
@@ -153,11 +153,11 @@
       "bytes": 50834140,
       "gameVersion": null,
       "downloads": 20,
-      "downloadsBase": 0,
-      "countedUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-we-don-t-negotiate-with-terrorists/we-don-t-negotiate-with-terrorists.zip",
+      "downloadsBase": 20,
+      "countedUrl": null,
       "listed": true,
       "published": "2026-08-10T06:52:48.054Z",
-      "updated": "2026-08-10T06:52:48.054Z"
+      "updated": "2026-08-26T19:11:34.687Z"
     }
   ]
 }
