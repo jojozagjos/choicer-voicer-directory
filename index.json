@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-29T01:47:10.032Z",
+  "updated": "2026-08-29T10:13:20.890Z",
   "packs": [
     {
       "version": 1,
@@ -152,7 +152,7 @@
       "iconSha256": "d9be2a9fa23247659fdd807c6a8494d8c1a0dde50e705e0ea733bcf84eaed8d2",
       "bytes": 50834140,
       "gameVersion": null,
-      "downloads": 22,
+      "downloads": 23,
       "downloadsBase": 20,
       "countedUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-we-don-t-negotiate-with-terrorists/we-don-t-negotiate-with-terrorists.zip",
       "listed": true,
