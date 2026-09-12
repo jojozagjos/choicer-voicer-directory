@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-09-12T10:56:30.831Z",
+  "updated": "2026-09-12T23:04:56.449Z",
   "packs": [
     {
       "version": 1,
@@ -156,7 +156,7 @@
       "iconSha256": "ea22bdeb30992f1e81683db80dbc6d0055b9dabf38803d7996aa8fb08e6ea4ce",
       "bytes": 61319868,
       "gameVersion": null,
-      "downloads": 30,
+      "downloads": 31,
       "downloadsBase": 12,
       "countedUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-shut-up-mom/shut-up-mom.zip",
       "listed": true,
