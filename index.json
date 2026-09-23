@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-09-23T11:49:19.798Z",
+  "updated": "2026-09-23T17:13:30.727Z",
   "packs": [
     {
       "version": 1,
@@ -130,7 +130,7 @@
       "iconSha256": "5b37a4c50f4e0be202ff795487413cf6a50d35ba020b0b07442d3caff8e2065b",
       "bytes": 33739026,
       "gameVersion": null,
-      "downloads": 23,
+      "downloads": 24,
       "downloadsBase": 0,
       "countedUrl": "https://github.com/inudiprivato-cloud/choicer-voicer-packs/releases/download/pack-shizaaaaaa/shizaaaaaa.zip",
       "listed": true,
