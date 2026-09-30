@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-09-30T12:46:03.564Z",
+  "updated": "2026-09-30T20:07:16.787Z",
   "packs": [
     {
       "version": 1,
@@ -19,7 +19,7 @@
       "iconSha256": "899709133d3572b2aa9548fbd11033e66a395ab84203f73c379ab569ce43f541",
       "bytes": 41462359,
       "gameVersion": null,
-      "downloads": 67,
+      "downloads": 68,
       "downloadsBase": 28,
       "countedUrl": "https://github.com/O-Reagano/choicer-voicer-packs/releases/download/pack-deku-stop-tickaling-me/deku-stop-tickaling-me.zip",
       "listed": true,
