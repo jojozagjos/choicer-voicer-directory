@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-04T12:32:00.991Z",
+  "updated": "2026-10-04T18:40:05.050Z",
   "packs": [
     {
       "version": 1,
@@ -126,7 +126,7 @@
       "iconSha256": "326a6cb9d2e5d038e0bc2df2c785c8393f2de32a34c4a184ac053f704d4c2088",
       "bytes": 23574693,
       "gameVersion": null,
-      "downloads": 1,
+      "downloads": 2,
       "downloadsBase": 0,
       "countedUrl": "https://github.com/season-sss/choicer-voicer-packs/releases/download/pack-mr-fanboy/mr-fanboy.zip",
       "listed": true,
