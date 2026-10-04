@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-03T11:48:59.398Z",
+  "updated": "2026-10-04T07:01:08.411Z",
   "packs": [
     {
       "version": 1,
@@ -105,6 +105,33 @@
       "listed": true,
       "published": "2026-08-20T02:53:17.907Z",
       "updated": "2026-08-20T02:53:17.907Z"
+    },
+    {
+      "version": 1,
+      "id": "mr-fanboy",
+      "type": "voice",
+      "title": "ซีนช่างแต่งหน้าเรนจิว่าน Mr.fanboy",
+      "summary": "จาก Mr.fanboy series",
+      "description": "เป็นฉากที่ช่างแต่งหน้าเม้ากันเริ่ดมาก",
+      "author": "season-sss",
+      "licence": "unstated",
+      "tags": [
+        "mrfanboy",
+        "thai-series"
+      ],
+      "content": [],
+      "downloadUrl": "https://github.com/season-sss/choicer-voicer-packs/releases/download/pack-mr-fanboy/mr-fanboy.zip",
+      "sha256": "79a4b12ff8076ff759aa43e19d0a81ef496eb8a99c862b410af70eb3e0ffa702",
+      "iconUrl": "https://github.com/season-sss/choicer-voicer-packs/releases/download/pack-mr-fanboy/mr-fanboy-icon.png",
+      "iconSha256": "326a6cb9d2e5d038e0bc2df2c785c8393f2de32a34c4a184ac053f704d4c2088",
+      "bytes": 23574693,
+      "gameVersion": null,
+      "downloads": 0,
+      "downloadsBase": 0,
+      "countedUrl": null,
+      "listed": true,
+      "published": "2026-10-04T07:00:48.799Z",
+      "updated": "2026-10-04T07:00:48.799Z"
     },
     {
       "version": 1,
