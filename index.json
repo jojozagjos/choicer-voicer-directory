@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-20T14:22:12.297Z",
+  "updated": "2026-10-21T05:29:17.091Z",
   "packs": [
     {
       "version": 1,
@@ -25,6 +25,33 @@
       "listed": true,
       "published": "2026-08-10T06:36:21.599Z",
       "updated": "2026-08-26T19:10:19.365Z"
+    },
+    {
+      "version": 1,
+      "id": "el-resplandor-escena-del-bate-latino",
+      "type": "voice",
+      "title": "El resplandor Escena del Bate Latino",
+      "summary": "Created with Choicer Voicer Pack Studio",
+      "description": "Escena donde Jack se pone loco con Wendy y le dan un batazo en la cabeza.",
+      "author": "Paclanc",
+      "licence": "cc-by",
+      "tags": [
+        "el-resplandor",
+        "shining"
+      ],
+      "content": [],
+      "downloadUrl": "https://github.com/Paclanc/choicer-voicer-packs/releases/download/pack-el-resplandor-escena-del-bate-latino/el-resplandor-escena-del-bate-latino.zip",
+      "sha256": "3e4df42824a2f8765d742846728df1768afc6a8af4c239610d2201db8593834c",
+      "iconUrl": "https://github.com/Paclanc/choicer-voicer-packs/releases/download/pack-el-resplandor-escena-del-bate-latino/el-resplandor-escena-del-bate-latino-icon.png",
+      "iconSha256": "ddeb694b5c3e0fb00077448cbe3124649c7bd0f3a54f2892779dca0097bf84a1",
+      "bytes": 89020610,
+      "gameVersion": null,
+      "downloads": 0,
+      "downloadsBase": 0,
+      "countedUrl": null,
+      "listed": true,
+      "published": "2026-10-21T05:28:57.277Z",
+      "updated": "2026-10-21T05:28:57.277Z"
     },
     {
       "version": 1,
