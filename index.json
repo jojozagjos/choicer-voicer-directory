@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-30T21:25:31.864Z",
+  "updated": "2026-10-30T22:28:40.164Z",
   "packs": [
     {
       "version": 1,
@@ -46,7 +46,7 @@
       "iconSha256": "ddeb694b5c3e0fb00077448cbe3124649c7bd0f3a54f2892779dca0097bf84a1",
       "bytes": 89020610,
       "gameVersion": null,
-      "downloads": 10,
+      "downloads": 11,
       "downloadsBase": 0,
       "countedUrl": "https://github.com/Paclanc/choicer-voicer-packs/releases/download/pack-el-resplandor-escena-del-bate-latino/el-resplandor-escena-del-bate-latino.zip",
       "listed": true,
@@ -75,9 +75,9 @@
       "iconSha256": "5dd9caf0b91ff10e3fcd8e1844f58fd30632e378ff64f68ac27a683a224ed73b",
       "bytes": 58790811,
       "gameVersion": null,
-      "downloads": 0,
+      "downloads": 1,
       "downloadsBase": 0,
-      "countedUrl": null,
+      "countedUrl": "https://github.com/Paclanc/choicer-voicer-packs/releases/download/pack-hellsing-anderson-usa-el-clavo-de-elena/hellsing-anderson-usa-el-clavo-de-elena.zip",
       "listed": true,
       "published": "2026-10-30T21:25:03.996Z",
       "updated": "2026-10-30T21:25:03.996Z"
