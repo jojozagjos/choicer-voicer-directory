@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-10-30T18:04:31.228Z",
+  "updated": "2026-10-30T21:25:31.864Z",
   "packs": [
     {
       "version": 1,
@@ -52,6 +52,35 @@
       "listed": true,
       "published": "2026-10-21T05:28:57.277Z",
       "updated": "2026-10-21T05:28:57.277Z"
+    },
+    {
+      "version": 1,
+      "id": "hellsing-anderson-usa-el-clavo-de-elena",
+      "type": "voice",
+      "title": "Hellsing - Anderson usa el clavo de Elena",
+      "summary": "Escena donde anderson revela su mejor carta para usar contra Alucard, convirtiendose en un monstruo.",
+      "description": "",
+      "author": "Paclanc",
+      "licence": "unstated",
+      "tags": [
+        "anime",
+        "esp",
+        "hellsing",
+        "japanese"
+      ],
+      "content": [],
+      "downloadUrl": "https://github.com/Paclanc/choicer-voicer-packs/releases/download/pack-hellsing-anderson-usa-el-clavo-de-elena/hellsing-anderson-usa-el-clavo-de-elena.zip",
+      "sha256": "68c645e0c794c86219b7c5ddb628f3f1b79d6327991e88622a09a7c3f5d41680",
+      "iconUrl": "https://github.com/Paclanc/choicer-voicer-packs/releases/download/pack-hellsing-anderson-usa-el-clavo-de-elena/hellsing-anderson-usa-el-clavo-de-elena-icon.png",
+      "iconSha256": "5dd9caf0b91ff10e3fcd8e1844f58fd30632e378ff64f68ac27a683a224ed73b",
+      "bytes": 58790811,
+      "gameVersion": null,
+      "downloads": 0,
+      "downloadsBase": 0,
+      "countedUrl": null,
+      "listed": true,
+      "published": "2026-10-30T21:25:03.996Z",
+      "updated": "2026-10-30T21:25:03.996Z"
     },
     {
       "version": 1,
